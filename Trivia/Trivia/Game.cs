@@ -25,23 +25,40 @@ namespace Trivia
         {
             for (var i = 0; i < 50; i++)
             {
-                _popQuestions.AddLast("Pop Question " + i);
-                _scienceQuestions.AddLast(("Science Question " + i));
-                _sportsQuestions.AddLast(("Sports Question " + i));
+                _popQuestions.AddLast(CreatePopQuestion(i));
+                _scienceQuestions.AddLast(CreateScienceQuestion(i));
+                _sportsQuestions.AddLast(CreateSportsQuestion(i));
                 _rockQuestions.AddLast(CreateRockQuestion(i));
             }
         }
 
+        // create a question for each category
+        public string CreatePopQuestion(int index)
+        {
+            return "Pop Question " + index;
+        }
+        
+        public string CreateScienceQuestion(int index)
+        {
+            return "Rock Question " + index;
+        }
+        
+        public string CreateSportsQuestion(int index)
+        {
+            return "Sports Question " + index;
+        }
         public string CreateRockQuestion(int index)
         {
             return "Rock Question " + index;
         }
 
+        // check if the game is playable
         public bool IsPlayable()
         {
             return (HowManyPlayers() >= 2);
         }
 
+        // add a player to the game
         public bool Add(string playerName)
         {
             _players.Add(playerName);
@@ -54,11 +71,13 @@ namespace Trivia
             return true;
         }
 
+        // how many players are in the game
         public int HowManyPlayers()
         {
             return _players.Count;
         }
 
+        // roll the dice
         public void Roll(int roll)
         {
             Console.WriteLine(_players[_currentPlayer] + " is the current player");
@@ -99,6 +118,7 @@ namespace Trivia
             }
         }
 
+        // ask a question
         private void AskQuestion()
         {
             if (CurrentCategory() == "Pop")
