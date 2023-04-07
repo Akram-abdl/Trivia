@@ -25,6 +25,7 @@ namespace Trivia
         private readonly int _goldCoinsToWin;
         private bool _isGettingOutOfPenaltyBox;
         private IConsole console;
+        private int currentQuestionIndex = 50;
 
         // constructor
         public Game(IConsole console, bool replaceRockWithTechno = false, int goldCoinsToWin = 6)
@@ -184,26 +185,31 @@ namespace Trivia
             if (CurrentCategory() == "Pop")
             {
                 this.console.WriteLine(_popQuestions.First());
+                _popQuestions.AddLast(CreatePopQuestion(currentQuestionIndex++));
                 _popQuestions.RemoveFirst();
             }
             if (CurrentCategory() == "Science")
             {
                 this.console.WriteLine(_scienceQuestions.First());
+                _scienceQuestions.AddLast(CreateScienceQuestion(currentQuestionIndex++));
                 _scienceQuestions.RemoveFirst();
             }
             if (CurrentCategory() == "Sports")
             {
                 this.console.WriteLine(_sportsQuestions.First());
+                _sportsQuestions.AddLast(CreateSportsQuestion(currentQuestionIndex++));
                 _sportsQuestions.RemoveFirst();
             }
             if (CurrentCategory() == "Rock" && !_technoQuestions.Any())
             {
                 this.console.WriteLine(_rockQuestions.First());
+                _rockQuestions.AddLast(CreateRockQuestion(currentQuestionIndex++));
                 _rockQuestions.RemoveFirst();
             }
             if (CurrentCategory() == "Techno")
             {
                 this.console.WriteLine(_technoQuestions.First());
+                _technoQuestions.AddLast(CreateTechnoQuestion(currentQuestionIndex++));
                 _technoQuestions.RemoveFirst();
             }
 
