@@ -5,10 +5,12 @@ namespace Trivia
     public class GameRunner
     {
         private static bool _notAWinner;
+        private static IConsole console;
 
         public static void Main(string[] args)
         {
-            var aGame = new Game();
+            console = new SystemConsole();
+            var aGame = new Game(console);
 
             aGame.Add("Chet");
             aGame.Add("Pat");

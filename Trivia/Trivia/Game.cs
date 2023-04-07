@@ -20,9 +20,12 @@ namespace Trivia
 
         private int _currentPlayer;
         private bool _isGettingOutOfPenaltyBox;
+        private IConsole console;
 
-        public Game()
+
+        public Game(IConsole console)
         {
+            this.console = console;
             for (var i = 0; i < 50; i++)
             {
                 _popQuestions.AddLast("Pop Question " + i);
@@ -49,8 +52,8 @@ namespace Trivia
             _purses[HowManyPlayers()] = 0;
             _inPenaltyBox[HowManyPlayers()] = false;
 
-            Console.WriteLine(playerName + " was added");
-            Console.WriteLine("They are player number " + _players.Count);
+            this.console.WriteLine(playerName + " was added");
+            this.console.WriteLine("They are player number " + _players.Count);
             return true;
         }
 
@@ -61,8 +64,8 @@ namespace Trivia
 
         public void Roll(int roll)
         {
-            Console.WriteLine(_players[_currentPlayer] + " is the current player");
-            Console.WriteLine("They have rolled a " + roll);
+            this.console.WriteLine(_players[_currentPlayer] + " is the current player");
+            this.console.WriteLine("They have rolled a " + roll);
 
             if (_inPenaltyBox[_currentPlayer])
             {
@@ -70,19 +73,19 @@ namespace Trivia
                 {
                     _isGettingOutOfPenaltyBox = true;
 
-                    Console.WriteLine(_players[_currentPlayer] + " is getting out of the penalty box");
+                    this.console.WriteLine(_players[_currentPlayer] + " is getting out of the penalty box");
                     _places[_currentPlayer] = _places[_currentPlayer] + roll;
                     if (_places[_currentPlayer] > 11) _places[_currentPlayer] = _places[_currentPlayer] - 12;
 
-                    Console.WriteLine(_players[_currentPlayer]
+                    this.console.WriteLine(_players[_currentPlayer]
                             + "'s new location is "
                             + _places[_currentPlayer]);
-                    Console.WriteLine("The category is " + CurrentCategory());
+                    this.console.WriteLine("The category is " + CurrentCategory());
                     AskQuestion();
                 }
                 else
                 {
-                    Console.WriteLine(_players[_currentPlayer] + " is not getting out of the penalty box");
+                    this.console.WriteLine(_players[_currentPlayer] + " is not getting out of the penalty box");
                     _isGettingOutOfPenaltyBox = false;
                 }
             }
@@ -91,10 +94,10 @@ namespace Trivia
                 _places[_currentPlayer] = _places[_currentPlayer] + roll;
                 if (_places[_currentPlayer] > 11) _places[_currentPlayer] = _places[_currentPlayer] - 12;
 
-                Console.WriteLine(_players[_currentPlayer]
+                this.console.WriteLine(_players[_currentPlayer]
                         + "'s new location is "
                         + _places[_currentPlayer]);
-                Console.WriteLine("The category is " + CurrentCategory());
+                this.console.WriteLine("The category is " + CurrentCategory());
                 AskQuestion();
             }
         }
@@ -103,22 +106,22 @@ namespace Trivia
         {
             if (CurrentCategory() == "Pop")
             {
-                Console.WriteLine(_popQuestions.First());
+                this.console.WriteLine(_popQuestions.First());
                 _popQuestions.RemoveFirst();
             }
             if (CurrentCategory() == "Science")
             {
-                Console.WriteLine(_scienceQuestions.First());
+                this.console.WriteLine(_scienceQuestions.First());
                 _scienceQuestions.RemoveFirst();
             }
             if (CurrentCategory() == "Sports")
             {
-                Console.WriteLine(_sportsQuestions.First());
+                this.console.WriteLine(_sportsQuestions.First());
                 _sportsQuestions.RemoveFirst();
             }
             if (CurrentCategory() == "Rock")
             {
-                Console.WriteLine(_rockQuestions.First());
+                this.console.WriteLine(_rockQuestions.First());
                 _rockQuestions.RemoveFirst();
             }
         }
@@ -143,12 +146,12 @@ namespace Trivia
             {
                 if (_isGettingOutOfPenaltyBox)
                 {
-                    Console.WriteLine("Answer was correct!!!!");
+                    this.console.WriteLine("Answer was correct!!!!");
                     _purses[_currentPlayer]++;
-                    Console.WriteLine(_players[_currentPlayer]
-                            + " now has "
-                            + _purses[_currentPlayer]
-                            + " Gold Coins.");
+                    this.console.WriteLine(_players[_currentPlayer]
+                                           + " now has "
+                                           + _purses[_currentPlayer]
+                                           + " Gold Coins.");
 
                     var winner = DidPlayerWin();
                     _currentPlayer++;
@@ -165,12 +168,12 @@ namespace Trivia
             }
             else
             {
-                Console.WriteLine("Answer was corrent!!!!");
+                this.console.WriteLine("Answer was corrent!!!!");
                 _purses[_currentPlayer]++;
-                Console.WriteLine(_players[_currentPlayer]
-                        + " now has "
-                        + _purses[_currentPlayer]
-                        + " Gold Coins.");
+                this.console.WriteLine(_players[_currentPlayer]
+                                       + " now has "
+                                       + _purses[_currentPlayer]
+                                       + " Gold Coins.");
 
                 var winner = DidPlayerWin();
                 _currentPlayer++;
@@ -182,8 +185,8 @@ namespace Trivia
 
         public bool WrongAnswer()
         {
-            Console.WriteLine("Question was incorrectly answered");
-            Console.WriteLine(_players[_currentPlayer] + " was sent to the penalty box");
+            this.console.WriteLine("Question was incorrectly answered");
+            this.console.WriteLine(_players[_currentPlayer] + " was sent to the penalty box");
             _inPenaltyBox[_currentPlayer] = true;
 
             _currentPlayer++;
