@@ -12,7 +12,8 @@ namespace Trivia
         private readonly int[] _purses = new int[6];
 
         private readonly bool[] _inPenaltyBox = new bool[6];
-
+        
+        private readonly LinkedList<string> _technoQuestions = new();
         private readonly LinkedList<string> _popQuestions = new();
         private readonly LinkedList<string> _scienceQuestions = new();
         private readonly LinkedList<string> _sportsQuestions = new();
@@ -22,14 +23,21 @@ namespace Trivia
         private bool _isGettingOutOfPenaltyBox;
 
         // constructor
-        public Game()
+        public Game(bool replaceRockWithTechno = false)
         {
             for (var i = 0; i < 50; i++)
             {
                 _popQuestions.AddLast(CreatePopQuestion(i));
                 _scienceQuestions.AddLast(CreateScienceQuestion(i));
                 _sportsQuestions.AddLast(CreateSportsQuestion(i));
-                _rockQuestions.AddLast(CreateRockQuestion(i));
+                if (replaceRockWithTechno)
+                {
+                    _technoQuestions.AddLast(CreateTechnoQuestion(i));
+                }
+                else
+                {
+                    _rockQuestions.AddLast(CreateRockQuestion(i));
+                }
             }
         }
 
@@ -51,6 +59,10 @@ namespace Trivia
         public string CreateRockQuestion(int index)
         {
             return "Rock Question " + index;
+        }
+        public string CreateTechnoQuestion(int index)
+        {
+            return "Techno Question " + index;
         }
 
         // check if the game is playable
@@ -138,10 +150,15 @@ namespace Trivia
                 Console.WriteLine(_sportsQuestions.First());
                 _sportsQuestions.RemoveFirst();
             }
-            if (CurrentCategory() == "Rock")
+            if (CurrentCategory() == "Rock" && !_technoQuestions.Any())
             {
                 Console.WriteLine(_rockQuestions.First());
                 _rockQuestions.RemoveFirst();
+            }
+            if (CurrentCategory() == "Rock" && _technoQuestions.Any())
+            {
+                Console.WriteLine(_technoQuestions.First());
+                _technoQuestions.RemoveFirst();
             }
         }
 
