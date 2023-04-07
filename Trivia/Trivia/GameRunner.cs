@@ -8,7 +8,11 @@ namespace Trivia
 
         public static void Main(string[] args)
         {
-            var aGame = new Game();
+            Console.WriteLine("Do you want to replace Rock questions with Techno questions? (yes/no): ");
+            string userPreference = Console.ReadLine();
+            bool replaceRockWithTechno = userPreference.ToLower() == "yes";
+
+            var aGame = new Game(replaceRockWithTechno);
 
             aGame.Add("Chet");
             aGame.Add("Pat");
