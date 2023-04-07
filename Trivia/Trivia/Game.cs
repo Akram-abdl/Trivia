@@ -44,10 +44,13 @@ namespace Trivia
 
         public bool Add(string playerName)
         {
+            if (HowManyPlayers() >= 6)
+                throw new TooManyPlayersException();
+
             _players.Add(playerName);
-            _places[HowManyPlayers()] = 0;
-            _purses[HowManyPlayers()] = 0;
-            _inPenaltyBox[HowManyPlayers()] = false;
+            _places[HowManyPlayers() - 1] = 0;
+            _purses[HowManyPlayers() - 1] = 0;
+            _inPenaltyBox[HowManyPlayers() - 1] = false;
 
             Console.WriteLine(playerName + " was added");
             Console.WriteLine("They are player number " + _players.Count);
@@ -61,6 +64,9 @@ namespace Trivia
 
         public void Roll(int roll)
         {
+            if (HowManyPlayers() < 2)
+                throw new NotEnoughPlayersException();
+
             Console.WriteLine(_players[_currentPlayer] + " is the current player");
             Console.WriteLine("They have rolled a " + roll);
 
