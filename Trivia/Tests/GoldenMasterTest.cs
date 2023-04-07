@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using Tests.Utilities;
 using Trivia;
 using Xunit;
@@ -10,7 +9,6 @@ namespace Tests
 {
     public class GoldenMasterTest
     {
-        private List<string> playersList = new List<string> { "Chet", "Pat", "Sue" };
         
         [Fact(Skip = "Golden Master")]
         public void Record()
@@ -36,6 +34,8 @@ namespace Tests
         {
             var consoleSpy = new ConsoleSpy();
             var game = new GameRunner(consoleSpy);
+            
+            List<Player>playersList = new List<Player> { new Player("Chet"), new Player("Pat"), new Player("Sue") };
             
             game.PlayAGame(playersList);
 

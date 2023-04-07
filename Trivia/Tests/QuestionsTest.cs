@@ -14,7 +14,11 @@ public class QuestionsTest
 
         var runner = new GameRunner(consoleSpy);
         
-        List<string> playersList = new List<string> { "Chet", "Pat", "Sue" };
+        Player player = new Player("Chet", true);
+        Player player2 = new Player("Pat", true);
+        Player player3 = new Player("Sue", true);
+        List<Player> playersList = new List<Player> { player, player2, player3 };
+        
         runner.PlayAGameTest(playersList,true);
 
         Assert.Contains("Techno", consoleSpy.Content);
@@ -28,7 +32,11 @@ public class QuestionsTest
 
         var runner = new GameRunner(consoleSpy);
         
-        List<string> playersList = new List<string> { "Chet", "Pat", "Sue" };
+        Player player = new Player("Chet", true);
+        Player player2 = new Player("Pat", true);
+        Player player3 = new Player("Sue", true);
+        List<Player> playersList = new List<Player> { player, player2, player3 };
+        
         runner.PlayAGameTest(playersList,false);
 
         Assert.Contains("Rock", consoleSpy.Content);
