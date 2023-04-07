@@ -12,7 +12,8 @@ namespace Trivia
         private readonly int[] _purses = new int[6];
 
         private readonly bool[] _inPenaltyBox = new bool[6];
-        
+        private readonly bool _replaceRockWithTechno;
+
         private readonly LinkedList<string> _technoQuestions = new();
         private readonly LinkedList<string> _popQuestions = new();
         private readonly LinkedList<string> _scienceQuestions = new();
@@ -27,6 +28,7 @@ namespace Trivia
         public Game(IConsole console, bool replaceRockWithTechno = false)
         {
             this.console = console;
+            _replaceRockWithTechno = replaceRockWithTechno;
             for (var i = 0; i < 50; i++)
             {
                 _popQuestions.AddLast(CreatePopQuestion(i));
@@ -51,7 +53,7 @@ namespace Trivia
         
         public string CreateScienceQuestion(int index)
         {
-            return "Rock Question " + index;
+            return "Science Question " + index;
         }
         
         public string CreateSportsQuestion(int index)
@@ -94,7 +96,38 @@ namespace Trivia
         {
             return _players.Count;
         }
+        public bool RemovePlayer(string playerName)
+        {
+            int playerIndex = _players.IndexOf(playerName);
+            if (playerIndex == -1)
+            {
+                throw new InvalidOperationException("Player not found");
+            }
 
+            _players.RemoveAt(playerIndex);
+            int length = _players.Count - playerIndex - 1;
+            if (length > 0)
+            {
+                Array.Copy(_places, playerIndex + 1, _places, playerIndex, length);
+                Array.Copy(_purses, playerIndex + 1, _purses, playerIndex, length);
+                Array.Copy(_inPenaltyBox, playerIndex + 1, _inPenaltyBox, playerIndex, length);
+            }
+
+
+            if (_currentPlayer >= playerIndex)
+            {
+                _currentPlayer = _currentPlayer > 0 ? _currentPlayer - 1 : _players.Count - 1;
+            }
+            this.console.WriteLine(playerName + " has left the game.");
+
+            return IsPlayable(); // return whether the game is still playable after removing the player
+        }
+
+        
+        public string GetCurrentPlayerName()
+        {
+            return _players[_currentPlayer];
+        }
         // roll the dice
         public void Roll(int roll)
         {
@@ -163,21 +196,24 @@ namespace Trivia
                 this.console.WriteLine(_rockQuestions.First());
                 _rockQuestions.RemoveFirst();
             }
-            if (CurrentCategory() == "Rock" && _technoQuestions.Any())
+            if (CurrentCategory() == "Techno")
             {
                 this.console.WriteLine(_technoQuestions.First());
                 _technoQuestions.RemoveFirst();
             }
+
         }
 
         // current category
         private string CurrentCategory()
         {
-            if (_places[_currentPlayer] == 0 || _places[_currentPlayer] == 4 ||_places[_currentPlayer] == 8) return "Pop";
-            if (_places[_currentPlayer] == 1 ||_places[_currentPlayer] == 5||_places[_currentPlayer] == 9) return "Science";
-            if (_places[_currentPlayer] == 2||_places[_currentPlayer] == 6||_places[_currentPlayer] == 10) return "Sports";
+            if (_places[_currentPlayer] == 0 || _places[_currentPlayer] == 4 || _places[_currentPlayer] == 8) return "Pop";
+            if (_places[_currentPlayer] == 1 || _places[_currentPlayer] == 5 || _places[_currentPlayer] == 9) return "Science";
+            if (_places[_currentPlayer] == 2 || _places[_currentPlayer] == 6 || _places[_currentPlayer] == 10) return "Sports";
+            if (_technoQuestions.Any()) return "Techno";
             return "Rock";
         }
+
 
         // if the player answered correctly
         public bool WasCorrectlyAnswered()
