@@ -125,15 +125,9 @@ namespace Trivia
 
         private string CurrentCategory()
         {
-            if (_places[_currentPlayer] == 0) return "Pop";
-            if (_places[_currentPlayer] == 4) return "Pop";
-            if (_places[_currentPlayer] == 8) return "Pop";
-            if (_places[_currentPlayer] == 1) return "Science";
-            if (_places[_currentPlayer] == 5) return "Science";
-            if (_places[_currentPlayer] == 9) return "Science";
-            if (_places[_currentPlayer] == 2) return "Sports";
-            if (_places[_currentPlayer] == 6) return "Sports";
-            if (_places[_currentPlayer] == 10) return "Sports";
+            if (_places[_currentPlayer] == 0 || _places[_currentPlayer] == 4 ||_places[_currentPlayer] == 8) return "Pop";
+            if (_places[_currentPlayer] == 1 ||_places[_currentPlayer] == 5||_places[_currentPlayer] == 9) return "Science";
+            if (_places[_currentPlayer] == 2||_places[_currentPlayer] == 6||_places[_currentPlayer] == 10) return "Sports";
             return "Rock";
         }
 
