@@ -196,21 +196,24 @@ namespace Trivia
                 this.console.WriteLine(_rockQuestions.First());
                 _rockQuestions.RemoveFirst();
             }
-            if (CurrentCategory() == "Rock" && _technoQuestions.Any())
+            if (CurrentCategory() == "Techno")
             {
                 this.console.WriteLine(_technoQuestions.First());
                 _technoQuestions.RemoveFirst();
             }
+
         }
 
         // current category
         private string CurrentCategory()
         {
-            if (_places[_currentPlayer] == 0 || _places[_currentPlayer] == 4 ||_places[_currentPlayer] == 8) return "Pop";
-            if (_places[_currentPlayer] == 1 ||_places[_currentPlayer] == 5||_places[_currentPlayer] == 9) return "Science";
-            if (_places[_currentPlayer] == 2||_places[_currentPlayer] == 6||_places[_currentPlayer] == 10) return "Sports";
-            return _replaceRockWithTechno ? "Techno" : "Rock";
+            if (_places[_currentPlayer] == 0 || _places[_currentPlayer] == 4 || _places[_currentPlayer] == 8) return "Pop";
+            if (_places[_currentPlayer] == 1 || _places[_currentPlayer] == 5 || _places[_currentPlayer] == 9) return "Science";
+            if (_places[_currentPlayer] == 2 || _places[_currentPlayer] == 6 || _places[_currentPlayer] == 10) return "Sports";
+            if (_technoQuestions.Any()) return "Techno";
+            return "Rock";
         }
+
 
         // if the player answered correctly
         public bool WasCorrectlyAnswered()
