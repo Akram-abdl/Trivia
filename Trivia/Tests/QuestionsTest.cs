@@ -31,7 +31,7 @@ public class QuestionsTest
         List<string> playersList = new List<string> { "Chet", "Pat", "Sue" };
         runner.PlayAGameTest(playersList,false);
 
-        Assert.Contains("Techno", consoleSpy.Content);
-        Assert.DoesNotContain("Rock", consoleSpy.Content);
+        Assert.Contains("Rock", consoleSpy.Content);
+        Assert.DoesNotContain("Techno", consoleSpy.Content);
     }
 }
