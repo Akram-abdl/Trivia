@@ -6,6 +6,7 @@ namespace Trivia
     public class GameRunner
     {
         private static bool _notAWinner;
+        private static IConsole console;
 
         public static void Main(string[] args)
         {
@@ -15,12 +16,12 @@ namespace Trivia
         // play a game
         public void PlayAGame(List<String> players)
         {
-            
-            Console.WriteLine("Do you want to replace Rock questions with Techno questions? (yes/no): ");
+            console = new SystemConsole();
+            console.WriteLine("Do you want to replace Rock questions with Techno questions? (yes/no): ");
             string userPreference = Console.ReadLine();
             bool replaceRockWithTechno = userPreference.ToLower() == "yes";
 
-            var aGame = new Game(replaceRockWithTechno);
+            var aGame = new Game(console, replaceRockWithTechno);
 
             foreach (var player in players)
             {
