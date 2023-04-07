@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Trivia.Exceptions;
 
 namespace Trivia
 {
@@ -31,13 +32,16 @@ namespace Trivia
         private readonly LinkedList<string> _rockQuestions = new();
 
         private int _currentPlayer;
+        private readonly int _goldCoinsToWin;
         private bool _isGettingOutOfPenaltyBox;
         private IConsole console;
 
         // constructor
-        public Game(IConsole console, bool replaceRockWithTechno = false)
+        public Game(IConsole console, bool replaceRockWithTechno = false, int goldCoinsToWin = 6)
         {
             this.console = console;
+            _replaceRockWithTechno = replaceRockWithTechno;
+            _goldCoinsToWin = goldCoinsToWin;
             for (var i = 0; i < 50; i++)
             {
                 _popQuestions.AddLast(CreatePopQuestion(i));
@@ -91,6 +95,13 @@ namespace Trivia
             _places[HowManyPlayers()] = 0;
             _purses[HowManyPlayers()] = 0;
             _inPenaltyBox[HowManyPlayers()] = false;
+            if (HowManyPlayers() == 6)
+                throw new Exception(Messages.TooManyPlayerException);
+
+            _players.Add(playerName);
+            _places[HowManyPlayers() - 1] = 0;
+            _purses[HowManyPlayers() - 1] = 0;
+            _inPenaltyBox[HowManyPlayers() - 1] = false;
 
             this.console.WriteLine(playerName + " was added");
             this.console.WriteLine("They are player number " + _players.Count);
@@ -102,16 +113,50 @@ namespace Trivia
         {
             return _players.Count;
         }
-
-        // roll the dice
-        public void Roll(int roll)
+        public bool RemovePlayer(string playerName)
         {
+            int playerIndex = _players.IndexOf(playerName);
+            if (playerIndex == -1)
+            {
+                throw new InvalidOperationException("Player not found");
+            }
+
+            _players.RemoveAt(playerIndex);
+            int length = _players.Count - playerIndex - 1;
+            if (length > 0)
+            {
+                Array.Copy(_places, playerIndex + 1, _places, playerIndex, length);
+                Array.Copy(_purses, playerIndex + 1, _purses, playerIndex, length);
+                Array.Copy(_inPenaltyBox, playerIndex + 1, _inPenaltyBox, playerIndex, length);
+            }
+
+
+            if (_currentPlayer >= playerIndex)
+            {
+                _currentPlayer = _currentPlayer > 0 ? _currentPlayer - 1 : _players.Count - 1;
+            }
+            this.console.WriteLine(playerName + " has left the game.");
+
+            return IsPlayable(); // return whether the game is still playable after removing the player
+        }
+
+        
+        public string GetCurrentPlayerName()
+        {
+            return _players[_currentPlayer];
+        }
+        // roll the dice
+        public bool Roll(int roll)
+        {
+            if (HowManyPlayers() < 2)
+                throw new Exception(Messages.NotEnoughPlayerException);
+
+            this.console.WriteLine(_players[_currentPlayer] + " is the current player");
             this.console.WriteLine(_players[_currentPlayer].name + " is the current player");
             this.console.WriteLine("They have rolled a " + roll);
 
             if (_inPenaltyBox[_currentPlayer])
             {
-                // impair number
                 if (roll % 2 != 0)
                 {
                     _isGettingOutOfPenaltyBox = true;
@@ -131,6 +176,7 @@ namespace Trivia
                     this.console.WriteLine(_players[_currentPlayer].name + " is not getting out of the penalty box");
                     _isGettingOutOfPenaltyBox = false;
                 }
+                return _isGettingOutOfPenaltyBox;
             }
             else
             {
@@ -142,6 +188,7 @@ namespace Trivia
                         + _places[_currentPlayer]);
                 this.console.WriteLine("The category is " + CurrentCategory());
                 AskQuestion();
+                return true;
             }
         }
 
@@ -264,7 +311,7 @@ namespace Trivia
         // check if the player won
         private bool DidPlayerWin()
         {
-            return !(_purses[_currentPlayer] == 6);
+            return !(_purses[_currentPlayer] >= _goldCoinsToWin);
         }
     }
 
