@@ -30,6 +30,7 @@ namespace Trivia
         private readonly LinkedList<string> _scienceQuestions = new();
         private readonly LinkedList<string> _sportsQuestions = new();
         private readonly LinkedList<string> _rockQuestions = new();
+        private readonly bool _replaceRockWithTechno;
 
         private int _currentPlayer;
         private readonly int _goldCoinsToWin;
@@ -92,16 +93,13 @@ namespace Trivia
         public bool Add(string playerName)
         {
             _players.Add(new Player(playerName));
-            _places[HowManyPlayers()] = 0;
-            _purses[HowManyPlayers()] = 0;
+            _places[HowManyPlayers() - 1] = 0;
+            _purses[HowManyPlayers() - 1] = 0;
             _inPenaltyBox[HowManyPlayers()] = false;
             if (HowManyPlayers() == 6)
                 throw new Exception(Messages.TooManyPlayerException);
 
-            _players.Add(playerName);
-            _places[HowManyPlayers() - 1] = 0;
-            _purses[HowManyPlayers() - 1] = 0;
-            _inPenaltyBox[HowManyPlayers() - 1] = false;
+
 
             this.console.WriteLine(playerName + " was added");
             this.console.WriteLine("They are player number " + _players.Count);
@@ -115,7 +113,7 @@ namespace Trivia
         }
         public bool RemovePlayer(string playerName)
         {
-            int playerIndex = _players.IndexOf(playerName);
+            int playerIndex = _players.IndexOf(new Player(playerName));
             if (playerIndex == -1)
             {
                 throw new InvalidOperationException("Player not found");
@@ -143,7 +141,7 @@ namespace Trivia
         
         public string GetCurrentPlayerName()
         {
-            return _players[_currentPlayer];
+            return _players[_currentPlayer].name;
         }
         // roll the dice
         public bool Roll(int roll)
