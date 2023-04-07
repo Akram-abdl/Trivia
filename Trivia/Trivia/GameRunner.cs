@@ -6,17 +6,29 @@ namespace Trivia
     public class GameRunner
     {
         private static bool _notAWinner;
-        private static IConsole console;
+        private readonly IConsole console;
+        private readonly bool useRockQuestions;
 
         public static void Main(string[] args)
         {
             new GameRunner().PlayAGame(new List<string> {"Chet", "Pat", "Sue"});
         }
         
+        private GameRunner()
+        {
+            console = new SystemConsole();
+            useRockQuestions = Random.Shared.Next() % 2 == 1;
+        }
+        
+        public GameRunner(IConsole console, bool useRockQuestions)
+        {
+            this.console = console;
+            this.useRockQuestions = useRockQuestions;
+        }
+        
         // play a game
         public void PlayAGame(List<String> players)
         {
-            console = new SystemConsole();
             console.WriteLine("Do you want to replace Rock questions with Techno questions? (yes/no): ");
             string userPreference = Console.ReadLine();
             bool replaceRockWithTechno = userPreference.ToLower() == "yes";
