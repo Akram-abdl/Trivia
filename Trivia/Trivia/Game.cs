@@ -5,6 +5,15 @@ using Trivia.Exceptions;
 
 namespace Trivia
 {
+    public class Player{
+        public int nbJoker = 1;
+        public bool use = false;
+        public string name;
+        public Player(string name)
+        {
+            this.name = name;
+        }
+    }
     public class Game
     {
         private readonly List<Player> _players = new();
