@@ -17,18 +17,25 @@ namespace Trivia
         private readonly LinkedList<string> _scienceQuestions = new LinkedList<string>();
         private readonly LinkedList<string> _sportsQuestions = new LinkedList<string>();
         private readonly LinkedList<string> _rockQuestions = new LinkedList<string>();
-
+        private readonly LinkedList<string> _technoQuestions = new LinkedList<string>();
         private int _currentPlayer;
         private bool _isGettingOutOfPenaltyBox;
 
-        public Game()
+        public Game(bool replaceRockWithTechno = false)
         {
             for (var i = 0; i < 50; i++)
             {
                 _popQuestions.AddLast("Pop Question " + i);
                 _scienceQuestions.AddLast(("Science Question " + i));
                 _sportsQuestions.AddLast(("Sports Question " + i));
-                _rockQuestions.AddLast(CreateRockQuestion(i));
+                if (replaceRockWithTechno)
+                {
+                    _technoQuestions.AddLast(("Techno Question " + i));
+                }
+                else
+                {
+                    _rockQuestions.AddLast(CreateRockQuestion(i));
+                }
             }
         }
 
@@ -116,10 +123,15 @@ namespace Trivia
                 Console.WriteLine(_sportsQuestions.First());
                 _sportsQuestions.RemoveFirst();
             }
-            if (CurrentCategory() == "Rock")
+            if (CurrentCategory() == "Rock" && !_technoQuestions.Any())
             {
                 Console.WriteLine(_rockQuestions.First());
                 _rockQuestions.RemoveFirst();
+            }
+            if (CurrentCategory() == "Rock" && _technoQuestions.Any())
+            {
+                Console.WriteLine(_technoQuestions.First());
+                _technoQuestions.RemoveFirst();
             }
         }
 
