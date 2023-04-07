@@ -22,14 +22,17 @@ namespace Trivia
         private readonly LinkedList<string> _rockQuestions = new();
 
         private int _currentPlayer;
+        private readonly int _goldCoinsToWin;
         private bool _isGettingOutOfPenaltyBox;
         private IConsole console;
+        private int currentQuestionIndex = 50;
 
         // constructor
-        public Game(IConsole console, bool replaceRockWithTechno = false)
+        public Game(IConsole console, bool replaceRockWithTechno = false, int goldCoinsToWin = 6)
         {
             this.console = console;
             _replaceRockWithTechno = replaceRockWithTechno;
+            _goldCoinsToWin = goldCoinsToWin;
             for (var i = 0; i < 50; i++)
             {
                 _popQuestions.AddLast(CreatePopQuestion(i));
@@ -130,7 +133,7 @@ namespace Trivia
             return _players[_currentPlayer];
         }
         // roll the dice
-        public void Roll(int roll)
+        public bool Roll(int roll)
         {
             if (HowManyPlayers() < 2)
                 throw new Exception(Messages.NotEnoughPlayerException);
@@ -140,18 +143,18 @@ namespace Trivia
 
             if (_inPenaltyBox[_currentPlayer])
             {
-                // impair number
                 if (roll % 2 != 0)
                 {
                     _isGettingOutOfPenaltyBox = true;
 
                     this.console.WriteLine(_players[_currentPlayer] + " is getting out of the penalty box");
+                    _inPenaltyBox[_currentPlayer] = false;
                     _places[_currentPlayer] += roll;
                     if (_places[_currentPlayer] > 11) _places[_currentPlayer] -= 12;
 
                     this.console.WriteLine(_players[_currentPlayer]
-                            + "'s new location is "
-                            + _places[_currentPlayer]);
+                                           + "'s new location is "
+                                           + _places[_currentPlayer]);
                     this.console.WriteLine("The category is " + CurrentCategory());
                     AskQuestion();
                 }
@@ -160,6 +163,7 @@ namespace Trivia
                     this.console.WriteLine(_players[_currentPlayer] + " is not getting out of the penalty box");
                     _isGettingOutOfPenaltyBox = false;
                 }
+                return _isGettingOutOfPenaltyBox;
             }
             else
             {
@@ -167,10 +171,11 @@ namespace Trivia
                 if (_places[_currentPlayer] > 11) _places[_currentPlayer] -= 12;
 
                 this.console.WriteLine(_players[_currentPlayer]
-                        + "'s new location is "
-                        + _places[_currentPlayer]);
+                                       + "'s new location is "
+                                       + _places[_currentPlayer]);
                 this.console.WriteLine("The category is " + CurrentCategory());
                 AskQuestion();
+                return true;
             }
         }
 
@@ -180,26 +185,31 @@ namespace Trivia
             if (CurrentCategory() == "Pop")
             {
                 this.console.WriteLine(_popQuestions.First());
+                _popQuestions.AddLast(CreatePopQuestion(currentQuestionIndex++));
                 _popQuestions.RemoveFirst();
             }
             if (CurrentCategory() == "Science")
             {
                 this.console.WriteLine(_scienceQuestions.First());
+                _scienceQuestions.AddLast(CreateScienceQuestion(currentQuestionIndex++));
                 _scienceQuestions.RemoveFirst();
             }
             if (CurrentCategory() == "Sports")
             {
                 this.console.WriteLine(_sportsQuestions.First());
+                _sportsQuestions.AddLast(CreateSportsQuestion(currentQuestionIndex++));
                 _sportsQuestions.RemoveFirst();
             }
             if (CurrentCategory() == "Rock" && !_technoQuestions.Any())
             {
                 this.console.WriteLine(_rockQuestions.First());
+                _rockQuestions.AddLast(CreateRockQuestion(currentQuestionIndex++));
                 _rockQuestions.RemoveFirst();
             }
             if (CurrentCategory() == "Techno")
             {
                 this.console.WriteLine(_technoQuestions.First());
+                _technoQuestions.AddLast(CreateTechnoQuestion(currentQuestionIndex++));
                 _technoQuestions.RemoveFirst();
             }
 
@@ -275,7 +285,7 @@ namespace Trivia
         // check if the player won
         private bool DidPlayerWin()
         {
-            return !(_purses[_currentPlayer] == 6);
+            return !(_purses[_currentPlayer] >= _goldCoinsToWin);
         }
     }
 
