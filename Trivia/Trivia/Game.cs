@@ -22,14 +22,16 @@ namespace Trivia
         private readonly LinkedList<string> _rockQuestions = new();
 
         private int _currentPlayer;
+        private readonly int _goldCoinsToWin;
         private bool _isGettingOutOfPenaltyBox;
         private IConsole console;
 
         // constructor
-        public Game(IConsole console, bool replaceRockWithTechno = false)
+        public Game(IConsole console, bool replaceRockWithTechno = false, int goldCoinsToWin = 6)
         {
             this.console = console;
             _replaceRockWithTechno = replaceRockWithTechno;
+            _goldCoinsToWin = goldCoinsToWin;
             for (var i = 0; i < 50; i++)
             {
                 _popQuestions.AddLast(CreatePopQuestion(i));
@@ -130,7 +132,7 @@ namespace Trivia
             return _players[_currentPlayer];
         }
         // roll the dice
-        public void Roll(int roll)
+        public bool Roll(int roll)
         {
             if (HowManyPlayers() < 2)
                 throw new Exception(Messages.NotEnoughPlayerException);
@@ -140,7 +142,6 @@ namespace Trivia
 
             if (_inPenaltyBox[_currentPlayer])
             {
-                // impair number
                 if (roll % 2 != 0)
                 {
                     _isGettingOutOfPenaltyBox = true;
@@ -150,8 +151,8 @@ namespace Trivia
                     if (_places[_currentPlayer] > 11) _places[_currentPlayer] -= 12;
 
                     this.console.WriteLine(_players[_currentPlayer]
-                            + "'s new location is "
-                            + _places[_currentPlayer]);
+                                           + "'s new location is "
+                                           + _places[_currentPlayer]);
                     this.console.WriteLine("The category is " + CurrentCategory());
                     AskQuestion();
                 }
@@ -160,6 +161,7 @@ namespace Trivia
                     this.console.WriteLine(_players[_currentPlayer] + " is not getting out of the penalty box");
                     _isGettingOutOfPenaltyBox = false;
                 }
+                return _isGettingOutOfPenaltyBox;
             }
             else
             {
@@ -167,10 +169,11 @@ namespace Trivia
                 if (_places[_currentPlayer] > 11) _places[_currentPlayer] -= 12;
 
                 this.console.WriteLine(_players[_currentPlayer]
-                        + "'s new location is "
-                        + _places[_currentPlayer]);
+                                       + "'s new location is "
+                                       + _places[_currentPlayer]);
                 this.console.WriteLine("The category is " + CurrentCategory());
                 AskQuestion();
+                return true;
             }
         }
 
@@ -275,7 +278,7 @@ namespace Trivia
         // check if the player won
         private bool DidPlayerWin()
         {
-            return !(_purses[_currentPlayer] == 6);
+            return !(_purses[_currentPlayer] >= _goldCoinsToWin);
         }
     }
 

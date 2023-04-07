@@ -24,21 +24,21 @@ namespace Trivia
         }
 
         // play a game
-        public void PlayAGame(List<String> players)
+        public void PlayAGame(List<String> players, int goldCoinsToWin = 6)
         {
             console.WriteLine("Do you want to replace Rock questions with Techno questions? (yes/no): ");
             string userPreference = Console.ReadLine();
             bool replaceRockWithTechno = userPreference.ToLower() == "yes";
 
-            var aGame = new Game(console, replaceRockWithTechno);
+            var aGame = new Game(console, replaceRockWithTechno, goldCoinsToWin);
 
             Game(aGame, players);
         }
 
         // play a game test
-        public void PlayAGameTest(List<String> players, bool rockTechno)
+        public void PlayAGameTest(List<String> players, bool rockTechno, int goldCoinsToWin = 6)
         {
-            var aGame = new Game(console, rockTechno);
+            var aGame = new Game(console, rockTechno, goldCoinsToWin);
 
             Game(aGame, players);
         }
@@ -56,27 +56,29 @@ namespace Trivia
 
                 do
                 {
-                    aGame.Roll(rand.Next(5) + 1);
+                    bool shouldAnswer = aGame.Roll(rand.Next(5) + 1);
 
-
-                    console.WriteLine("Do you want to answer the question? (yes/leave): ");
-                    string userAnswer = Console.ReadLine().ToLower();
-
-                    if (userAnswer == "yes")
+                    if (shouldAnswer)
                     {
-                        if (rand.Next(9) == 7)
+                        console.WriteLine("Do you want to answer the question? (yes/leave): ");
+                        string userAnswer = Console.ReadLine().ToLower();
+
+                        if (userAnswer == "yes")
                         {
-                            _notAWinner = aGame.WrongAnswer();
+                            if (rand.Next(9) == 7)
+                            {
+                                _notAWinner = aGame.WrongAnswer();
+                            }
+                            else
+                            {
+                                _notAWinner = aGame.WasCorrectlyAnswered();
+                            }
                         }
-                        else
+                        else if (userAnswer == "leave")
                         {
-                            _notAWinner = aGame.WasCorrectlyAnswered();
+                            string currentPlayerName = aGame.GetCurrentPlayerName();
+                            _notAWinner = aGame.RemovePlayer(currentPlayerName);
                         }
-                    }
-                    else if (userAnswer == "leave")
-                    {
-                        string currentPlayerName = aGame.GetCurrentPlayerName();
-                        _notAWinner = aGame.RemovePlayer(currentPlayerName);
                     }
                 } while (_notAWinner);
             }
@@ -85,5 +87,6 @@ namespace Trivia
                 console.WriteLine(e.Message);
             }
         }
+
     }
 }
