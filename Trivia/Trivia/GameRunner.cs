@@ -10,7 +10,10 @@ namespace Trivia
 
         public static void Main(string[] args)
         {
-            new GameRunner().PlayAGame(new List<string> { "Chet", "Pat", "Sue" });
+            Player player1 = new Player("Chet");
+            Player player2 = new Player("Pat");
+            Player player3 = new Player("Sue");
+            new GameRunner().PlayAGame(new List<Player> { player1, player2, player3 });
         }
 
         private GameRunner()
@@ -24,7 +27,7 @@ namespace Trivia
         }
 
         // play a game
-        public void PlayAGame(List<String> players, int goldCoinsToWin = 6)
+        public void PlayAGame(List<Player> players, int goldCoinsToWin = 6)
         {
             console.WriteLine("Do you want to replace Rock questions with Techno questions? (yes/no): ");
             string userPreference = Console.ReadLine();
@@ -36,18 +39,18 @@ namespace Trivia
         }
 
         // play a game test
-        public void PlayAGameTest(List<String> players, bool rockTechno, int goldCoinsToWin = 6)
+        public void PlayAGameTest(List<Player> players, bool rockTechno, int goldCoinsToWin = 6)
         {
             var aGame = new Game(console, rockTechno, goldCoinsToWin);
 
             Game(aGame, players);
         }
 
-        public void Game(Game aGame, List<String> players)
+        public void Game(Game aGame, List<Player> players)
         {
             try
             {
-                foreach (var player in players)
+                foreach (Player player in players)
                 {
                     aGame.Add(player);
                 }
@@ -76,8 +79,8 @@ namespace Trivia
                         }
                         else if (userAnswer == "leave")
                         {
-                            string currentPlayerName = aGame.GetCurrentPlayerName();
-                            _notAWinner = aGame.RemovePlayer(currentPlayerName);
+                           ;
+                           _notAWinner = aGame.RemovePlayer(aGame.GetCurrentPlayer());
                         }
                     }
                 } while (_notAWinner);
