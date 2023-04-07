@@ -10,7 +10,7 @@ namespace Trivia
 
         private readonly int[] _places = new int[6];
         private readonly int[] _purses = new int[6];
-
+        private int[] corectanswerRow= new int[6];
         private readonly bool[] _inPenaltyBox = new bool[6];
         
         private readonly LinkedList<string> _technoQuestions = new();
@@ -82,6 +82,7 @@ namespace Trivia
             _players.Add(playerName);
             _places[HowManyPlayers() - 1] = 0;
             _purses[HowManyPlayers() - 1] = 0;
+            corectanswerRow[HowManyPlayers() - 1] = 0;
             _inPenaltyBox[HowManyPlayers() - 1] = false;
 
             this.console.WriteLine(playerName + " was added");
@@ -182,10 +183,17 @@ namespace Trivia
         // if the player answered correctly
         public bool WasCorrectlyAnswered()
         {
+            
             if (_inPenaltyBox[_currentPlayer])
             {
                 if (_isGettingOutOfPenaltyBox)
                 {
+                    
+                    int temp= int.Parse(corectanswerRow[_currentPlayer].ToString());
+                    corectanswerRow[_currentPlayer] = temp + 1;
+                    int bourse = int.Parse(_purses[_currentPlayer].ToString());
+                    _purses[_currentPlayer] = bourse + temp ;
+                    
                     this.console.WriteLine("Answer was correct!!!!");
                     _purses[_currentPlayer]++;
                     this.console.WriteLine(_players[_currentPlayer]
@@ -208,6 +216,12 @@ namespace Trivia
             }
             else
             {
+                int temp = int.Parse(corectanswerRow[_currentPlayer].ToString());
+                corectanswerRow[_currentPlayer] = temp + 1;
+                int bourse = int.Parse(_purses[_currentPlayer].ToString());
+                _purses[_currentPlayer] = bourse + temp ;
+                
+                
                 this.console.WriteLine("Answer was corrent!!!!");
                 _purses[_currentPlayer]++;
                 this.console.WriteLine(_players[_currentPlayer]
@@ -226,6 +240,7 @@ namespace Trivia
         // if the player answered incorrectly
         public bool WrongAnswer()
         {
+            corectanswerRow[_currentPlayer]=0;
             this.console.WriteLine("Question was incorrectly answered");
             this.console.WriteLine(_players[_currentPlayer] + " was sent to the penalty box");
             _inPenaltyBox[_currentPlayer] = true;
