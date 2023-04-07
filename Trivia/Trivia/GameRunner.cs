@@ -34,15 +34,28 @@ namespace Trivia
             {
                 aGame.Roll(rand.Next(5) + 1);
 
-                if (rand.Next(9) == 7)
+                console.WriteLine("Do you want to answer the question? (yes/leave): ");
+                string userAnswer = Console.ReadLine().ToLower();
+
+                if (userAnswer == "yes")
                 {
-                    _notAWinner = aGame.WrongAnswer();
+                    if (rand.Next(9) == 7)
+                    {
+                        _notAWinner = aGame.WrongAnswer();
+                    }
+                    else
+                    {
+                        _notAWinner = aGame.WasCorrectlyAnswered();
+                    }
                 }
-                else
+                else if (userAnswer == "leave")
                 {
-                    _notAWinner = aGame.WasCorrectlyAnswered();
+                    string currentPlayerName = aGame.GetCurrentPlayerName();
+                    _notAWinner = aGame.RemovePlayer(currentPlayerName);
                 }
             } while (_notAWinner);
         }
+
+
     }
 }
