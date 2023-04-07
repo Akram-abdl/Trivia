@@ -21,6 +21,7 @@ namespace Trivia
         private int _currentPlayer;
         private bool _isGettingOutOfPenaltyBox;
 
+        // constructor
         public Game()
         {
             for (var i = 0; i < 50; i++)
@@ -143,6 +144,7 @@ namespace Trivia
             }
         }
 
+        // current category
         private string CurrentCategory()
         {
             if (_places[_currentPlayer] == 0 || _places[_currentPlayer] == 4 ||_places[_currentPlayer] == 8) return "Pop";
@@ -151,6 +153,7 @@ namespace Trivia
             return "Rock";
         }
 
+        // if the player answered correctly
         public bool WasCorrectlyAnswered()
         {
             if (_inPenaltyBox[_currentPlayer])
@@ -194,6 +197,7 @@ namespace Trivia
             }
         }
 
+        // if the player answered incorrectly
         public bool WrongAnswer()
         {
             Console.WriteLine("Question was incorrectly answered");
@@ -205,7 +209,7 @@ namespace Trivia
             return true;
         }
 
-
+        // check if the player won
         private bool DidPlayerWin()
         {
             return !(_purses[_currentPlayer] == 6);
