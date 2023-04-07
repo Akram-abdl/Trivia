@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Trivia.Exceptions;
 
 namespace Trivia
 {
@@ -78,8 +79,8 @@ namespace Trivia
         // add a player to the game
         public bool Add(string playerName)
         {
-            if (HowManyPlayers() >= 6)
-                throw new TooManyPlayersException();
+            if (HowManyPlayers() == 6)
+                throw new Exception(Messages.TooManyPlayerException);
 
             _players.Add(playerName);
             _places[HowManyPlayers() - 1] = 0;
@@ -132,7 +133,7 @@ namespace Trivia
         public void Roll(int roll)
         {
             if (HowManyPlayers() < 2)
-                throw new NotEnoughPlayersException();
+                throw new Exception(Messages.NotEnoughPlayerException);
 
             this.console.WriteLine(_players[_currentPlayer] + " is the current player");
             this.console.WriteLine("They have rolled a " + roll);

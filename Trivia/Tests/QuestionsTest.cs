@@ -8,15 +8,30 @@ namespace Tests;
 public class QuestionsTest
 {
     [Fact]
-    public void DemoFeature1()
+    public void TechnoQuestion()
     {
         var consoleSpy = new ConsoleSpy();
 
-        var runner = new GameRunner(consoleSpy, true);
+        var runner = new GameRunner(consoleSpy);
         
         List<string> playersList = new List<string> { "Chet", "Pat", "Sue" };
-        runner.PlayAGame(playersList);
+        runner.PlayAGameTest(playersList,true);
 
-        Assert.Contains("Rock", consoleSpy.Content);
+        Assert.Contains("Techno", consoleSpy.Content);
+        Assert.DoesNotContain("Rock", consoleSpy.Content);
+    }
+    
+    [Fact]
+    public void RockQuestion()
+    {
+        var consoleSpy = new ConsoleSpy();
+
+        var runner = new GameRunner(consoleSpy);
+        
+        List<string> playersList = new List<string> { "Chet", "Pat", "Sue" };
+        runner.PlayAGameTest(playersList,false);
+
+        Assert.Contains("Techno", consoleSpy.Content);
+        Assert.DoesNotContain("Rock", consoleSpy.Content);
     }
 }

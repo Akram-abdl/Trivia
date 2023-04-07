@@ -16,7 +16,7 @@ namespace Tests
         public void Record()
         {
             var consoleSpy = new ConsoleSpy();
-            var game = new GameRunner(consoleSpy, false);
+            var game = new GameRunner(consoleSpy);
 
             var recordedContent = consoleSpy.Content;
             // get path to record.txt
@@ -35,7 +35,7 @@ namespace Tests
         public void Replay()
         {
             var consoleSpy = new ConsoleSpy();
-            var game = new GameRunner(consoleSpy, false);
+            var game = new GameRunner(consoleSpy);
             
             game.PlayAGame(playersList);
 

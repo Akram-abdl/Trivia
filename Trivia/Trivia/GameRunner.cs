@@ -7,25 +7,22 @@ namespace Trivia
     {
         private static bool _notAWinner;
         private readonly IConsole console;
-        private readonly bool useRockQuestions;
 
         public static void Main(string[] args)
         {
-            new GameRunner().PlayAGame(new List<string> {"Chet", "Pat", "Sue"});
+            new GameRunner().PlayAGame(new List<string> { "Chet", "Pat", "Sue" });
         }
-        
+
         private GameRunner()
         {
             console = new SystemConsole();
-            useRockQuestions = Random.Shared.Next() % 2 == 1;
         }
-        
-        public GameRunner(IConsole console, bool useRockQuestions)
+
+        public GameRunner(IConsole console)
         {
             this.console = console;
-            this.useRockQuestions = useRockQuestions;
         }
-        
+
         // play a game
         public void PlayAGame(List<String> players)
         {
@@ -35,39 +32,58 @@ namespace Trivia
 
             var aGame = new Game(console, replaceRockWithTechno);
 
-            foreach (var player in players)
-            {
-                aGame.Add(player);
-            }
-
-            var rand = new Random();
-
-            do
-            {
-                aGame.Roll(rand.Next(5) + 1);
-
-                console.WriteLine("Do you want to answer the question? (yes/leave): ");
-                string userAnswer = Console.ReadLine().ToLower();
-
-                if (userAnswer == "yes")
-                {
-                    if (rand.Next(9) == 7)
-                    {
-                        _notAWinner = aGame.WrongAnswer();
-                    }
-                    else
-                    {
-                        _notAWinner = aGame.WasCorrectlyAnswered();
-                    }
-                }
-                else if (userAnswer == "leave")
-                {
-                    string currentPlayerName = aGame.GetCurrentPlayerName();
-                    _notAWinner = aGame.RemovePlayer(currentPlayerName);
-                }
-            } while (_notAWinner);
+            Game(aGame, players);
         }
 
+        // play a game test
+        public void PlayAGameTest(List<String> players, bool rockTechno)
+        {
+            var aGame = new Game(console, rockTechno);
 
+            Game(aGame, players);
+        }
+
+        public void Game(Game aGame, List<String> players)
+        {
+            try
+            {
+                foreach (var player in players)
+                {
+                    aGame.Add(player);
+                }
+
+                var rand = new Random();
+
+                do
+                {
+                    aGame.Roll(rand.Next(5) + 1);
+
+
+                    console.WriteLine("Do you want to answer the question? (yes/leave): ");
+                    string userAnswer = Console.ReadLine().ToLower();
+
+                    if (userAnswer == "yes")
+                    {
+                        if (rand.Next(9) == 7)
+                        {
+                            _notAWinner = aGame.WrongAnswer();
+                        }
+                        else
+                        {
+                            _notAWinner = aGame.WasCorrectlyAnswered();
+                        }
+                    }
+                    else if (userAnswer == "leave")
+                    {
+                        string currentPlayerName = aGame.GetCurrentPlayerName();
+                        _notAWinner = aGame.RemovePlayer(currentPlayerName);
+                    }
+                } while (_notAWinner);
+            }
+            catch (Exception e)
+            {
+                console.WriteLine(e.Message);
+            }
+        }
     }
 }
