@@ -76,10 +76,13 @@ namespace Trivia
         // add a player to the game
         public bool Add(string playerName)
         {
+            if (HowManyPlayers() >= 6)
+                throw new TooManyPlayersException();
+
             _players.Add(playerName);
-            _places[HowManyPlayers()] = 0;
-            _purses[HowManyPlayers()] = 0;
-            _inPenaltyBox[HowManyPlayers()] = false;
+            _places[HowManyPlayers() - 1] = 0;
+            _purses[HowManyPlayers() - 1] = 0;
+            _inPenaltyBox[HowManyPlayers() - 1] = false;
 
             this.console.WriteLine(playerName + " was added");
             this.console.WriteLine("They are player number " + _players.Count);
@@ -95,6 +98,9 @@ namespace Trivia
         // roll the dice
         public void Roll(int roll)
         {
+            if (HowManyPlayers() < 2)
+                throw new NotEnoughPlayersException();
+
             this.console.WriteLine(_players[_currentPlayer] + " is the current player");
             this.console.WriteLine("They have rolled a " + roll);
 
