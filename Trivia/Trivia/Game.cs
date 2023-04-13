@@ -11,6 +11,8 @@ namespace Trivia
 
         private readonly int[] _places = new int[6];
         private readonly int[] _purses = new int[6];
+        private readonly int[] _timesInPrison = new int[6];
+        private readonly int[] _turnInPrison = new int[6];
         private int[] corectanswerRow = new int[6];
         private readonly bool[] _inPenaltyBox = new bool[6];
         private readonly bool _replaceRockWithTechno;
@@ -24,33 +26,33 @@ namespace Trivia
         private int _currentPlayer;
         private readonly int _goldCoinsToWin;
         private bool _isGettingOutOfPenaltyBox;
+        private Random rand;
         private IConsole console;
         private int currentQuestionIndex = 50;
         private string message;
 
         // constructor
-        public Game(IConsole console, bool replaceRockWithTechno = false, int goldCoinsToWin = 6)
+        public Game(IConsole console, Random rand, bool replaceRockWithTechno = false, int goldCoinsToWin = 6)
         {
             this.console = console;
             _replaceRockWithTechno = replaceRockWithTechno;
             _goldCoinsToWin = goldCoinsToWin;
-
+            this.rand = rand;
             
-                for (var i = 0; i < 50; i++)
+            for (var i = 0; i < 50; i++)
+            {
+                _popQuestions.AddLast(CreatePopQuestion(i));
+                _scienceQuestions.AddLast(CreateScienceQuestion(i));
+                _sportsQuestions.AddLast(CreateSportsQuestion(i));
+                if (replaceRockWithTechno)
                 {
-                    _popQuestions.AddLast(CreatePopQuestion(i));
-                    _scienceQuestions.AddLast(CreateScienceQuestion(i));
-                    _sportsQuestions.AddLast(CreateSportsQuestion(i));
-                    if (replaceRockWithTechno)
-                    {
-                        _technoQuestions.AddLast(CreateTechnoQuestion(i));
-                    }
-                    else
-                    {
-                        _rockQuestions.AddLast(CreateRockQuestion(i));
-                    }
+                    _technoQuestions.AddLast(CreateTechnoQuestion(i));
                 }
-              
+                else
+                {
+                    _rockQuestions.AddLast(CreateRockQuestion(i));
+                }
+            }
         }
 
         // create a question for each category
@@ -92,6 +94,8 @@ namespace Trivia
             _players.Add(player);
             _places[HowManyPlayers() - 1] = 0;
             _purses[HowManyPlayers() - 1] = 0;
+            _timesInPrison[HowManyPlayers() - 1] = 0;
+            _turnInPrison[HowManyPlayers() - 1] = 0;
             corectanswerRow[HowManyPlayers() - 1] = 0;
             _inPenaltyBox[HowManyPlayers()-1] = false;
             
@@ -149,7 +153,7 @@ namespace Trivia
 
             if (_inPenaltyBox[_currentPlayer])
             {
-                if (roll % 2 != 0)
+                if (rand.Next(1, (int)(_timesInPrison[_currentPlayer] * (1.0 - (0.1 * _turnInPrison[_currentPlayer])))) == 1)
                 {
                     _isGettingOutOfPenaltyBox = true;
 
@@ -168,6 +172,7 @@ namespace Trivia
                 {
                     this.console.WriteLine(_players[_currentPlayer].name + " is not getting out of the penalty box");
                     _isGettingOutOfPenaltyBox = false;
+                    _turnInPrison[_currentPlayer]++;
                 }
                 return _isGettingOutOfPenaltyBox;
             }
@@ -314,6 +319,8 @@ namespace Trivia
             this.console.WriteLine("Question was incorrectly answered");
             this.console.WriteLine(_players[_currentPlayer].name + " was sent to the penalty box");
             _inPenaltyBox[_currentPlayer] = true;
+            _timesInPrison[_currentPlayer]++;
+            _turnInPrison[_currentPlayer] = 0;
 
             _currentPlayer++;
             if (_currentPlayer == _players.Count) _currentPlayer = 0;
