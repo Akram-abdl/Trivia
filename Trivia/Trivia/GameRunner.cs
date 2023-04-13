@@ -7,6 +7,7 @@ namespace Trivia
     {
         private static bool _notAWinner;
         private readonly IConsole console;
+        private Random rand;
 
         public static void Main(string[] args)
         {
@@ -19,11 +20,14 @@ namespace Trivia
         private GameRunner()
         {
             console = new SystemConsole();
+            rand = new Random();
+            console.WriteLine(rand.Next(1, 1).ToString());
         }
 
         public GameRunner(IConsole console)
         {
             this.console = console;
+            rand = new Random();
         }
 
         // play a game
@@ -33,7 +37,7 @@ namespace Trivia
             string userPreference = Console.ReadLine();
             bool replaceRockWithTechno = userPreference.ToLower() == "yes";
 
-            var aGame = new Game(console, replaceRockWithTechno, goldCoinsToWin);
+            var aGame = new Game(console, rand, replaceRockWithTechno, goldCoinsToWin);
 
             Game(aGame, players);
         }
@@ -41,7 +45,7 @@ namespace Trivia
         // play a game test
         public void PlayAGameTest(List<Player> players, bool rockTechno, int goldCoinsToWin = 6)
         {
-            var aGame = new Game(console, rockTechno, goldCoinsToWin);
+            var aGame = new Game(console, rand, rockTechno, goldCoinsToWin);
 
             Game(aGame, players);
         }
@@ -54,8 +58,6 @@ namespace Trivia
                 {
                     aGame.Add(player);
                 }
-
-                var rand = new Random();
 
                 do
                 {

@@ -11,6 +11,7 @@ namespace Trivia
 
         private readonly int[] _places = new int[6];
         private readonly int[] _purses = new int[6];
+        private readonly int[] _timesInPrison = new int[6];
         private int[] corectanswerRow = new int[6];
         private readonly bool[] _inPenaltyBox = new bool[6];
         private readonly bool _replaceRockWithTechno;
@@ -24,15 +25,18 @@ namespace Trivia
         private int _currentPlayer;
         private readonly int _goldCoinsToWin;
         private bool _isGettingOutOfPenaltyBox;
+        private Random rand;
         private IConsole console;
         private int currentQuestionIndex = 50;
 
         // constructor
-        public Game(IConsole console, bool replaceRockWithTechno = false, int goldCoinsToWin = 6)
+        public Game(IConsole console, Random rand, bool replaceRockWithTechno = false, int goldCoinsToWin = 6)
         {
             this.console = console;
             _replaceRockWithTechno = replaceRockWithTechno;
             _goldCoinsToWin = goldCoinsToWin;
+            this.rand = rand;
+            
             for (var i = 0; i < 50; i++)
             {
                 _popQuestions.AddLast(CreatePopQuestion(i));
@@ -145,7 +149,7 @@ namespace Trivia
 
             if (_inPenaltyBox[_currentPlayer])
             {
-                if (roll % 2 != 0)
+                if (rand.Next(1, _timesInPrison[_currentPlayer]) == 1)
                 {
                     _isGettingOutOfPenaltyBox = true;
 
@@ -310,6 +314,7 @@ namespace Trivia
             this.console.WriteLine("Question was incorrectly answered");
             this.console.WriteLine(_players[_currentPlayer].name + " was sent to the penalty box");
             _inPenaltyBox[_currentPlayer] = true;
+            _timesInPrison[_currentPlayer]++;
 
             _currentPlayer++;
             if (_currentPlayer == _players.Count) _currentPlayer = 0;
