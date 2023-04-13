@@ -48,8 +48,10 @@ namespace Trivia
 
         public void Game(Game aGame, List<Player> players)
         {
+            string message;
             try
             {
+                do { 
                 foreach (Player player in players)
                 {
                     aGame.Add(player);
@@ -84,6 +86,9 @@ namespace Trivia
                         }
                     }
                 } while (_notAWinner);
+                    Console.WriteLine(" Voulez vous rejouer la partie avec les mêmes paramètres ? (y/n)");
+                    message = Console.ReadLine();
+                } while (message == "y");
             }
             catch (Exception e)
             {

@@ -26,6 +26,7 @@ namespace Trivia
         private bool _isGettingOutOfPenaltyBox;
         private IConsole console;
         private int currentQuestionIndex = 50;
+        private string message;
 
         // constructor
         public Game(IConsole console, bool replaceRockWithTechno = false, int goldCoinsToWin = 6)
@@ -33,20 +34,23 @@ namespace Trivia
             this.console = console;
             _replaceRockWithTechno = replaceRockWithTechno;
             _goldCoinsToWin = goldCoinsToWin;
-            for (var i = 0; i < 50; i++)
-            {
-                _popQuestions.AddLast(CreatePopQuestion(i));
-                _scienceQuestions.AddLast(CreateScienceQuestion(i));
-                _sportsQuestions.AddLast(CreateSportsQuestion(i));
-                if (replaceRockWithTechno)
+
+            
+                for (var i = 0; i < 50; i++)
                 {
-                    _technoQuestions.AddLast(CreateTechnoQuestion(i));
+                    _popQuestions.AddLast(CreatePopQuestion(i));
+                    _scienceQuestions.AddLast(CreateScienceQuestion(i));
+                    _sportsQuestions.AddLast(CreateSportsQuestion(i));
+                    if (replaceRockWithTechno)
+                    {
+                        _technoQuestions.AddLast(CreateTechnoQuestion(i));
+                    }
+                    else
+                    {
+                        _rockQuestions.AddLast(CreateRockQuestion(i));
+                    }
                 }
-                else
-                {
-                    _rockQuestions.AddLast(CreateRockQuestion(i));
-                }
-            }
+              
         }
 
         // create a question for each category
