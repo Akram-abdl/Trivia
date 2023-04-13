@@ -5,31 +5,22 @@ using Trivia.Exceptions;
 
 namespace Trivia
 {
-    public class Player{
-        public int nbJoker = 1;
-        public bool use = false;
-        public string name;
-        public Player(string name)
-        {
-            this.name = name;
-        }
-    }
     public class Game
     {
-        private readonly List<Player> _players = new();
+        private List<Player> _players = new List<Player>();
 
         private readonly int[] _places = new int[6];
         private readonly int[] _purses = new int[6];
         private readonly int[] _timesInPrison = new int[6];
-
+        private int[] corectanswerRow = new int[6];
         private readonly bool[] _inPenaltyBox = new bool[6];
         private readonly bool _replaceRockWithTechno;
 
-        private readonly LinkedList<string> _technoQuestions = new();
-        private readonly LinkedList<string> _popQuestions = new();
-        private readonly LinkedList<string> _scienceQuestions = new();
-        private readonly LinkedList<string> _sportsQuestions = new();
-        private readonly LinkedList<string> _rockQuestions = new();
+        private readonly LinkedList<string> _technoQuestions = new LinkedList<string>();
+        private readonly LinkedList<string> _popQuestions = new LinkedList<string>();
+        private readonly LinkedList<string> _scienceQuestions = new LinkedList<string>();
+        private readonly LinkedList<string> _sportsQuestions = new LinkedList<string>();
+        private readonly LinkedList<string> _rockQuestions = new LinkedList<string>();
 
         private int _currentPlayer;
         private readonly int _goldCoinsToWin;
@@ -93,17 +84,18 @@ namespace Trivia
         }
 
         // add a player to the game
-        public bool Add(string playerName)
+        public bool Add(Player player)
         {
             if (HowManyPlayers() == 6)
                 throw new Exception(Messages.TooManyPlayerException);
             
-            _players.Add(new Player(playerName));
+            _players.Add(player);
             _places[HowManyPlayers() - 1] = 0;
             _purses[HowManyPlayers() - 1] = 0;
-            _inPenaltyBox[HowManyPlayers()] = false;
+            corectanswerRow[HowManyPlayers() - 1] = 0;
+            _inPenaltyBox[HowManyPlayers()-1] = false;
             
-            this.console.WriteLine(playerName + " was added");
+            this.console.WriteLine(player + " was added");
             this.console.WriteLine("They are player number " + _players.Count);
             return true;
         }
@@ -113,9 +105,9 @@ namespace Trivia
         {
             return _players.Count;
         }
-        public bool RemovePlayer(string playerName)
+        public bool RemovePlayer(Player player)
         {
-            int playerIndex = _players.IndexOf(new Player(playerName));
+            int playerIndex = _players.IndexOf(player);
             if (playerIndex == -1)
             {
                 throw new InvalidOperationException("Player not found");
@@ -135,15 +127,15 @@ namespace Trivia
             {
                 _currentPlayer = _currentPlayer > 0 ? _currentPlayer - 1 : _players.Count - 1;
             }
-            this.console.WriteLine(playerName + " has left the game.");
+            this.console.WriteLine(player + " has left the game.");
 
             return IsPlayable(); // return whether the game is still playable after removing the player
         }
 
         
-        public string GetCurrentPlayerName()
+        public Player GetCurrentPlayer()
         {
-            return _players[_currentPlayer].name;
+            return _players[_currentPlayer];
         }
         // roll the dice
         public bool Roll(int roll)
@@ -268,6 +260,11 @@ namespace Trivia
             {
                 if (_isGettingOutOfPenaltyBox)
                 {
+                    int temp = int.Parse(corectanswerRow[_currentPlayer].ToString());
+                    corectanswerRow[_currentPlayer] = temp + 1;
+                    int bourse = int.Parse(_purses[_currentPlayer].ToString());
+                    _purses[_currentPlayer] = bourse + temp;
+
                     this.console.WriteLine("Answer was correct!!!!");
                     _purses[_currentPlayer]++;
                     this.console.WriteLine(_players[_currentPlayer].name
@@ -290,6 +287,11 @@ namespace Trivia
             }
             else
             {
+                int temp = int.Parse(corectanswerRow[_currentPlayer].ToString());
+                corectanswerRow[_currentPlayer] = temp + 1;
+                int bourse = int.Parse(_purses[_currentPlayer].ToString());
+                _purses[_currentPlayer] = bourse + temp;
+
                 this.console.WriteLine("Answer was corrent!!!!");
                 _purses[_currentPlayer]++;
                 this.console.WriteLine(_players[_currentPlayer].name
@@ -308,6 +310,7 @@ namespace Trivia
         // if the player answered incorrectly
         public bool WrongAnswer()
         {
+            corectanswerRow[_currentPlayer] = 0;
             this.console.WriteLine("Question was incorrectly answered");
             this.console.WriteLine(_players[_currentPlayer].name + " was sent to the penalty box");
             _inPenaltyBox[_currentPlayer] = true;
