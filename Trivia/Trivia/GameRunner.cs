@@ -63,9 +63,8 @@ namespace Trivia
 
                     if (shouldAnswer)
                     {
-                        console.WriteLine("Do you want to answer the question? (yes/leave): ");
-                        string userAnswer = Console.ReadLine().ToLower();
-
+                        String userAnswer = aGame.AskBoolQuestion();
+                        
                         if (userAnswer == "yes")
                         {
                             if (rand.Next(9) == 7)
@@ -90,6 +89,5 @@ namespace Trivia
                 console.WriteLine(e.Message);
             }
         }
-
     }
 }

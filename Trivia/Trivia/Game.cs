@@ -138,7 +138,7 @@ namespace Trivia
             if (HowManyPlayers() < 2)
                 throw new Exception(Messages.NotEnoughPlayerException);
 
-            this.console.WriteLine(_players[_currentPlayer] + " is the current player");
+            this.console.WriteLine(" ");
             this.console.WriteLine(_players[_currentPlayer].name + " is the current player");
             this.console.WriteLine("They have rolled a " + roll);
 
@@ -177,6 +177,23 @@ namespace Trivia
                 this.console.WriteLine("The category is " + CurrentCategory());
                 AskQuestion();
                 return true;
+            }
+        }
+
+        public String AskBoolQuestion()
+        {
+            if (_players[_currentPlayer].askYesQuestion == 0)
+            {
+                console.WriteLine("Do you want to answer the question? (yes/leave): ");
+                return  Console.ReadLine().ToLower();
+            }
+                else if (_players[_currentPlayer].askYesQuestion == 1)
+            {
+                return "yes";
+            }
+            else
+            {
+                return "no";
             }
         }
 
