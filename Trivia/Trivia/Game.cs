@@ -275,6 +275,23 @@ namespace Trivia
                 return "n";
             }
         }
+        
+        public String AskJokerQuestion()
+        {
+            if (_players[_currentPlayer].reGameQuestion == 0)
+            {
+                console.WriteLine(" Do you want to use your joker? (yes/no)");
+                return Console.ReadLine().ToLower();
+            }
+            else if (_players[_currentPlayer].askYesQuestion == 1)
+            {
+                return "yes";
+            }
+            else
+            {
+                return "no";
+            }
+        }
 
         // ask a question
         private void AskQuestion()

@@ -9,10 +9,19 @@ public class Player
     public int Purse { get; set; }
     public bool InPenaltyBox { get; set; }
     public int CorrectAnswersRow { get; set; }
+    
+    //--------------------------------------
+                //only use in test
+    //--------------------------------------
+    
+    
+
     // 0: null, 1: yes question asked, 2: no question asked
     public int askYesQuestion { get; set; }
     // 0: null, 1: yes question asked, 2: no question asked
     public int reGameQuestion { get; set; }
+    // 0: null, 1: yes question asked, 2: no question asked
+    public int askJokerQuestion { get; set; }
     
 
     public Player(string name)
@@ -22,16 +31,19 @@ public class Player
         use = false;
         askYesQuestion = 0;
         reGameQuestion = 0;
+        askJokerQuestion = 0;
     }
     
-    public Player(string name, int askYesQuestion, int reGameQuestion)
+    public Player(string name, int askYesQuestion, int reGameQuestion, int askJokerQuestion)
     {
         this.name = name;
         this.askYesQuestion = askYesQuestion;
         this.reGameQuestion = reGameQuestion;
+        this.askJokerQuestion = askJokerQuestion;
         nbJoker = 1;
         use = false;
     }
+   
 
     public override string ToString()
     {
