@@ -7,7 +7,10 @@ namespace Trivia
     {
         private static bool _notAWinner;
         private readonly IConsole console;
+
         private List<Player> winners = new List<Player>();
+        private Random rand;
+
 
         public static void Main(string[] args)
         {
@@ -20,11 +23,14 @@ namespace Trivia
         private GameRunner()
         {
             console = new SystemConsole();
+            rand = new Random();
+            console.WriteLine(rand.Next(1, 1).ToString());
         }
 
         public GameRunner(IConsole console)
         {
             this.console = console;
+            rand = new Random();
         }
 
         // play a game
@@ -40,7 +46,7 @@ namespace Trivia
             string userPreference = Console.ReadLine();
             bool replaceRockWithTechno = userPreference.ToLower() == "yes";
 
-            var aGame = new Game(console, replaceRockWithTechno, goldCoinsToWin);
+            var aGame = new Game(console, rand, replaceRockWithTechno, goldCoinsToWin);
 
             Game(aGame, players);
         }
@@ -48,60 +54,69 @@ namespace Trivia
         // play a game test
         public void PlayAGameTest(List<Player> players, bool rockTechno, int goldCoinsToWin = 2)
         {
-            var aGame = new Game(console, rockTechno, goldCoinsToWin);
+            var aGame = new Game(console, rand, rockTechno, goldCoinsToWin);
 
             Game(aGame, players);
         }
 
         public void Game(Game aGame, List<Player> players)
         {
+            string message;
             try
             {
-                foreach (Player player in players)
+                do
                 {
-                    aGame.Add(player);
-                }
-
-                var rand = new Random();
-
-                while (players.Count > 0 && winners.Count < 3)
-                {
-                    bool shouldAnswer = aGame.Roll(rand.Next(5) + 1);
-
-                    if (shouldAnswer)
+                    foreach (Player player in players)
                     {
-                        console.WriteLine("Do you want to answer the question? (yes/leave): ");
-                        string userAnswer = Console.ReadLine().ToLower();
+                        aGame.Add(player);
+                    }
 
-                        if (userAnswer == "yes")
+                    do
+                    {
+                        bool shouldAnswer = aGame.Roll(rand.Next(5) + 1);
+
+                        if (shouldAnswer)
                         {
-                            if (rand.Next(9) == 7)
+                            console.WriteLine("Do you want to answer the question? (yes/leave): ");
+                            string userAnswer = Console.ReadLine().ToLower();
+
+                            if (userAnswer == "yes")
                             {
-                                aGame.WrongAnswer();
-                            }
-                            else
-                            {
-                                Player winner = aGame.WasCorrectlyAnswered();
-                                if (winner != null)
+                                if (rand.Next(9) == 7)
                                 {
-                                    winners.Add(winner);
-                                    aGame.RemovePlayer(winner);
+                                    aGame.WrongAnswer();
+                                }
+                                else
+                                {
+                                    Player winner = aGame.WasCorrectlyAnswered();
+                                    if (winner != null)
+                                    {
+                                        winners.Add(winner);
+                                        aGame.RemovePlayer(winner);
+                                    }
                                 }
                             }
+                            else if (userAnswer == "leave")
+                            {
+                                Player currentPlayer = aGame.GetCurrentPlayer();
+                                aGame.RemovePlayer(currentPlayer);
+                            }
                         }
-                        else if (userAnswer == "leave")
-                        {
-                            Player currentPlayer = aGame.GetCurrentPlayer();
-                            aGame.RemovePlayer(currentPlayer);
-                        }
-                    }
-                }
+
+                    } while (_notAWinner);
+
+                    Console.WriteLine(" Voulez vous rejouer la partie avec les mêmes paramètres ? (y/n)");
+                    message = Console.ReadLine();
+                } while (message == "y");
 
                 console.WriteLine("Game Over! Here is the leaderboard:");
                 for (int i = 0; i < winners.Count; i++)
                 {
                     console.WriteLine($"{i + 1}. {winners[i].name}");
                 }
+
+              
+
             }
             catch (Exception e)
             {
