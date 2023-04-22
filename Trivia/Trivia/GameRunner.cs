@@ -78,23 +78,33 @@ namespace Trivia
                     {
                         bool shouldAnswer = aGame.Roll(rand.Next(5) + 1);
 
-                        if (shouldAnswer)
-                        {
-                            String userAnswer = aGame.AskBoolQuestion();
+                        if (shouldAnswer) {
+                            console.WriteLine("Do you want to answer the question? (yes/leave): ");
+                            string userAnswer = Console.ReadLine().ToLower();
+                            string jokAnswer = "";
+                            if (userAnswer == "yes") {
+                                if (aGame.haveJok())
+                                {
+                                    console.WriteLine("Do you want to use your joker? (yes/no): ");
+                                    jokAnswer = Console.ReadLine().ToLower();
+                                }
+                                if (jokAnswer == "yes")
+                                {
+                                    _notAWinner = !aGame.WasCorrectlyAnswered(true);
+                                }else
+                                {
+                                    if (rand.Next(9) == 7)
+                                    {
+                                        _notAWinner = aGame.WrongAnswer();
+                                    }
+                                    else
+                                    {
+                                        _notAWinner = !aGame.WasCorrectlyAnswered();
+                                    }
+                                }
+                                
+                            } else if (userAnswer == "leave") {
 
-                            if (userAnswer == "yes")
-                            {
-                                if (rand.Next(9) == 7)
-                                {
-                                    _notAWinner = aGame.WrongAnswer();
-                                }
-                                else
-                                {
-                                    _notAWinner = aGame.WasCorrectlyAnswered();
-                                }
-                            }
-                            else if (userAnswer == "leave")
-                            {
                                 _notAWinner = aGame.RemovePlayer(aGame.GetCurrentPlayer());
                             }
                         }
