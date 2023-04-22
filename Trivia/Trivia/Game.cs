@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 using Trivia.Exceptions;
 
 namespace Trivia
@@ -268,6 +269,10 @@ namespace Trivia
             }
             else if (_players[_currentPlayer].askYesQuestion == 1)
             {
+                foreach (Player player in _players)
+                {
+                    _purses[_currentPlayer] = 0;
+                }
                 return "y";
             }
             else
