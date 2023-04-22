@@ -15,6 +15,7 @@ namespace Trivia
         private readonly int[] _turnInPrison = new int[6];
         private int[] corectanswerRow = new int[6];
         private readonly bool[] _inPenaltyBox = new bool[6];
+        private LinkedList<int> _orderInPenaltyBox = new LinkedList<int>();
         private readonly bool _replaceRockWithTechno;
         private const int HowManyPlaces = 15;
         private readonly LinkedList<string> _technoQuestions = new LinkedList<string>();
@@ -33,18 +34,20 @@ namespace Trivia
         private int _currentPlayer;
         private readonly int _goldCoinsToWin;
         private bool _isGettingOutOfPenaltyBox;
+        private readonly int _penaltyBoxNumberOfPlaces;
         private Random rand;
         private IConsole console;
         private int currentQuestionIndex = 50;
         private string message;
 
         // constructor
-        public Game(IConsole console, Random rand, bool replaceRockWithTechno = false, int goldCoinsToWin = 6)
+        public Game(IConsole console, Random rand, bool replaceRockWithTechno = false, int goldCoinsToWin = 6, int penaltyBoxNumberOfPlaces = 0)
         {
             this.console = console;
             _replaceRockWithTechno = replaceRockWithTechno;
             _goldCoinsToWin = goldCoinsToWin;
             this.rand = rand;
+            _penaltyBoxNumberOfPlaces = penaltyBoxNumberOfPlaces;
             
             for (var i = 0; i < 50; i++)
             {
@@ -169,6 +172,11 @@ namespace Trivia
             {
                 _currentPlayer = _currentPlayer > 0 ? _currentPlayer - 1 : _players.Count - 1;
             }
+
+            LinkedListNode<int> indexInPenaltyBox = _orderInPenaltyBox.Find(playerIndex);
+            if(indexInPenaltyBox != null)
+                _orderInPenaltyBox.Remove(indexInPenaltyBox);
+            
             this.console.WriteLine(player + " has left the game.");
 
             return IsPlayable(); // return whether the game is still playable after removing the player
@@ -200,6 +208,9 @@ namespace Trivia
 
                     this.console.WriteLine(_players[_currentPlayer].name + " is getting out of the penalty box");
                     _inPenaltyBox[_currentPlayer] = false;
+                    LinkedListNode<int> indexInPenaltyBox = _orderInPenaltyBox.Find(_currentPlayer);
+                    if(indexInPenaltyBox != null)
+                        _orderInPenaltyBox.Remove(indexInPenaltyBox);
                     _places[_currentPlayer] += roll;
                     if (_places[_currentPlayer] >= HowManyPlaces) _places[_currentPlayer] -= HowManyPlaces;
 
@@ -430,6 +441,19 @@ namespace Trivia
             _inPenaltyBox[_currentPlayer] = true;
             _timesInPrison[_currentPlayer]++;
             _turnInPrison[_currentPlayer] = 0;
+
+            if (_penaltyBoxNumberOfPlaces == 0 || _orderInPenaltyBox.Count < _penaltyBoxNumberOfPlaces)
+            {
+                _orderInPenaltyBox.Append(_currentPlayer);
+            }
+            else
+            {
+                int playerLeavingPenaltyBox = _orderInPenaltyBox.First!.Value;
+                _orderInPenaltyBox.RemoveFirst();
+                _inPenaltyBox[playerLeavingPenaltyBox] = false;
+                console.WriteLine($"{_players[playerLeavingPenaltyBox]} leaved the penalty box");
+                _orderInPenaltyBox.Append(_currentPlayer);
+            }
 
             _currentPlayer++;
             if (_currentPlayer == _players.Count) _currentPlayer = 0;
