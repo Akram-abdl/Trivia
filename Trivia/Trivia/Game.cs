@@ -16,12 +16,19 @@ namespace Trivia
         private int[] corectanswerRow = new int[6];
         private readonly bool[] _inPenaltyBox = new bool[6];
         private readonly bool _replaceRockWithTechno;
-
+        private const int HowManyPlaces = 15;
         private readonly LinkedList<string> _technoQuestions = new LinkedList<string>();
         private readonly LinkedList<string> _popQuestions = new LinkedList<string>();
         private readonly LinkedList<string> _scienceQuestions = new LinkedList<string>();
         private readonly LinkedList<string> _sportsQuestions = new LinkedList<string>();
         private readonly LinkedList<string> _rockQuestions = new LinkedList<string>();
+        // expansion pack
+        private readonly LinkedList<string> _rapQuestions = new LinkedList<string>();
+        private readonly LinkedList<string> _philosophyQuestions = new LinkedList<string>();
+        private readonly LinkedList<string> _literatureQuestions = new LinkedList<string>();
+        private readonly LinkedList<string> _geographyQuestions = new LinkedList<string>();
+        private readonly LinkedList<string> _peopleQuestions = new LinkedList<string>();
+
 
         private int _currentPlayer;
         private readonly int _goldCoinsToWin;
@@ -38,12 +45,17 @@ namespace Trivia
             _replaceRockWithTechno = replaceRockWithTechno;
             _goldCoinsToWin = goldCoinsToWin;
             this.rand = rand;
-
+            
             for (var i = 0; i < 50; i++)
             {
                 _popQuestions.AddLast(CreatePopQuestion(i));
                 _scienceQuestions.AddLast(CreateScienceQuestion(i));
                 _sportsQuestions.AddLast(CreateSportsQuestion(i));
+                _rapQuestions.AddLast(CreateRapQuestion(i));
+                _philosophyQuestions.AddLast(CreatePhilosophyQuestion(i));
+                _literatureQuestions.AddLast(CreateLiteratureQuestion(i));
+                _geographyQuestions.AddLast(CreateGeographyQuestion(i));
+                _peopleQuestions.AddLast(CreatePeopleQuestion(i));
                 if (replaceRockWithTechno)
                 {
                     _technoQuestions.AddLast(CreateTechnoQuestion(i));
@@ -60,25 +72,49 @@ namespace Trivia
         {
             return "Pop Question " + index;
         }
-
+        
         public string CreateScienceQuestion(int index)
         {
             return "Science Question " + index;
         }
-
+        
         public string CreateSportsQuestion(int index)
         {
             return "Sports Question " + index;
         }
-
         public string CreateRockQuestion(int index)
         {
             return "Rock Question " + index;
         }
-
         public string CreateTechnoQuestion(int index)
         {
             return "Techno Question " + index;
+        }
+        //expansion pack subjects
+        
+        public string CreateRapQuestion(int index)
+        {
+            return "Rap Question " + index;
+        }
+
+        public string CreatePhilosophyQuestion(int index)
+        {
+            return "Philosophy Question " + index;
+        }
+
+        public string CreateLiteratureQuestion(int index)
+        {
+            return "Literature Question " + index;
+        }
+
+        public string CreateGeographyQuestion(int index)
+        {
+            return "Geography Question " + index;
+        }
+
+        public string CreatePeopleQuestion(int index)
+        {
+            return "People Question " + index;
         }
 
         // check if the game is playable
@@ -92,15 +128,15 @@ namespace Trivia
         {
             if (HowManyPlayers() == 6)
                 throw new Exception(Messages.TooManyPlayerException);
-
+            
             _players.Add(player);
             _places[HowManyPlayers() - 1] = 0;
             _purses[HowManyPlayers() - 1] = 0;
             _timesInPrison[HowManyPlayers() - 1] = 0;
             _turnInPrison[HowManyPlayers() - 1] = 0;
             corectanswerRow[HowManyPlayers() - 1] = 0;
-            _inPenaltyBox[HowManyPlayers() - 1] = false;
-
+            _inPenaltyBox[HowManyPlayers()-1] = false;
+            
             this.console.WriteLine(player + " was added");
             this.console.WriteLine("They are player number " + _players.Count);
             return true;
@@ -111,7 +147,7 @@ namespace Trivia
         {
             return _players.Count;
         }
-
+        
         public bool RemovePlayer(Player player)
         {
             int playerIndex = _players.IndexOf(player);
@@ -133,23 +169,23 @@ namespace Trivia
             {
                 _currentPlayer = _currentPlayer > 0 ? _currentPlayer - 1 : _players.Count - 1;
             }
-
             this.console.WriteLine(player + " has left the game.");
 
             return IsPlayable(); // return whether the game is still playable after removing the player
         }
 
-
+        
         public Player GetCurrentPlayer()
         {
             return _players[_currentPlayer];
         }
-
         // roll the dice
         public bool Roll(int roll)
         {
             if (HowManyPlayers() < 2)
+            {
                 throw new Exception(Messages.NotEnoughPlayerException);
+            }
 
             this.console.WriteLine(" ");
             this.console.WriteLine(_players[_currentPlayer].name + " is the current player");
@@ -165,7 +201,7 @@ namespace Trivia
                     this.console.WriteLine(_players[_currentPlayer].name + " is getting out of the penalty box");
                     _inPenaltyBox[_currentPlayer] = false;
                     _places[_currentPlayer] += roll;
-                    if (_places[_currentPlayer] > 11) _places[_currentPlayer] -= 12;
+                    if (_places[_currentPlayer] >= HowManyPlaces) _places[_currentPlayer] -= HowManyPlaces;
 
                     this.console.WriteLine(_players[_currentPlayer].name
                                            + "'s new location is "
@@ -179,13 +215,12 @@ namespace Trivia
                     _isGettingOutOfPenaltyBox = false;
                     _turnInPrison[_currentPlayer]++;
                 }
-
                 return _isGettingOutOfPenaltyBox;
             }
             else
             {
                 _places[_currentPlayer] += roll;
-                if (_places[_currentPlayer] > 11) _places[_currentPlayer] -= 12;
+                if (_places[_currentPlayer] >= HowManyPlaces) _places[_currentPlayer] -= HowManyPlaces;
 
                 this.console.WriteLine(_players[_currentPlayer].name
                                        + "'s new location is "
@@ -239,33 +274,60 @@ namespace Trivia
                 _popQuestions.AddLast(CreatePopQuestion(currentQuestionIndex++));
                 _popQuestions.RemoveFirst();
             }
-
             if (CurrentCategory() == "Science")
             {
                 this.console.WriteLine(_scienceQuestions.First());
                 _scienceQuestions.AddLast(CreateScienceQuestion(currentQuestionIndex++));
                 _scienceQuestions.RemoveFirst();
             }
-
             if (CurrentCategory() == "Sports")
             {
                 this.console.WriteLine(_sportsQuestions.First());
                 _sportsQuestions.AddLast(CreateSportsQuestion(currentQuestionIndex++));
                 _sportsQuestions.RemoveFirst();
             }
-
             if (CurrentCategory() == "Rock" && !_technoQuestions.Any())
             {
                 this.console.WriteLine(_rockQuestions.First());
                 _rockQuestions.AddLast(CreateRockQuestion(currentQuestionIndex++));
                 _rockQuestions.RemoveFirst();
             }
-
             if (CurrentCategory() == "Techno")
             {
                 this.console.WriteLine(_technoQuestions.First());
                 _technoQuestions.AddLast(CreateTechnoQuestion(currentQuestionIndex++));
                 _technoQuestions.RemoveFirst();
+            }
+            if (CurrentCategory() == "Rap")
+            {
+                this.console.WriteLine(_rapQuestions.First());
+                _rapQuestions.AddLast(CreateRapQuestion(currentQuestionIndex++));
+                _rapQuestions.RemoveFirst();
+            }
+            if (CurrentCategory() == "Philosophy")
+            {
+                this.console.WriteLine(_philosophyQuestions.First());
+                _philosophyQuestions.AddLast(CreatePhilosophyQuestion(currentQuestionIndex++));
+                _philosophyQuestions.RemoveFirst();
+            }
+            if (CurrentCategory() == "Literature")
+            {
+                this.console.WriteLine(_literatureQuestions.First());
+                _literatureQuestions.AddLast(CreateLiteratureQuestion(currentQuestionIndex++));
+                _literatureQuestions.RemoveFirst();
+            }
+            if (CurrentCategory() == "Geography")
+            {
+                this.console.WriteLine(_geographyQuestions.First());
+                _geographyQuestions.AddLast(CreateGeographyQuestion(currentQuestionIndex++));
+                _geographyQuestions.RemoveFirst();
+            }
+
+            if (CurrentCategory() == "People")
+            {
+                this.console.WriteLine(_peopleQuestions.First());
+                _peopleQuestions.AddLast(CreatePeopleQuestion(currentQuestionIndex++));
+                _peopleQuestions.RemoveFirst();
             }
         }
 
@@ -278,28 +340,32 @@ namespace Trivia
             if (_players[_currentPlayer].nbJoker == 1)
             {
                 console.WriteLine("Do you want to use your joker ?");
-
-                if (Console.ReadLine() == 'y'.ToString())
+                
+                if (Console.ReadLine() == 'y'.ToString()) 
                 {
                     _players[_currentPlayer].nbJoker++;
                     _players[_currentPlayer].use = true;
-                    val = true;
+                   val = true;
                 }
+                
+
             }
-
             return val;
+            
         }
-
         private string CurrentCategory()
         {
-            if (_places[_currentPlayer] == 0 || _places[_currentPlayer] == 4 || _places[_currentPlayer] == 8)
-                return "Pop";
-            if (_places[_currentPlayer] == 1 || _places[_currentPlayer] == 5 || _places[_currentPlayer] == 9)
-                return "Science";
-            if (_places[_currentPlayer] == 2 || _places[_currentPlayer] == 6 || _places[_currentPlayer] == 10)
-                return "Sports";
+            if (_places[_currentPlayer] == 0 || _places[_currentPlayer] == 4 || _places[_currentPlayer] == 8) return "Pop";
+            if (_places[_currentPlayer] == 1 || _places[_currentPlayer] == 5 || _places[_currentPlayer] == 9) return "Science";
+            if (_places[_currentPlayer] == 2 || _places[_currentPlayer] == 6 || _places[_currentPlayer] == 10) return "Sports";
+            if (_places[_currentPlayer] == 3 || _places[_currentPlayer] == 7) return "Rock";
+            if (_places[_currentPlayer] == 11) return "Rap";
+            if (_places[_currentPlayer] == 12) return "Philosophy";
+            if (_places[_currentPlayer] == 13) return "Literature";
+            if (_places[_currentPlayer] == 14) return "Geography";
             if (_technoQuestions.Any()) return "Techno";
-            return "Rock";
+            
+            return "People";
         }
 
 
@@ -355,6 +421,7 @@ namespace Trivia
         }
 
 
+
         // if the player answered wrong
         public bool WrongAnswer()
         {
@@ -373,8 +440,7 @@ namespace Trivia
         {
             if (_purses[_currentPlayer] == _goldCoinsToWin)
             {
-                console.WriteLine(
-                    $"{_players[_currentPlayer]} has won the game with {_purses[_currentPlayer]} Gold Coins!");
+                console.WriteLine($"{_players[_currentPlayer]} has won the game with {_purses[_currentPlayer]} Gold Coins!");
                 return true;
             }
             else

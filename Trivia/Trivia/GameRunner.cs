@@ -35,7 +35,7 @@ namespace Trivia
         }
 
         // play a game
-        public void PlayAGame(List<Player> players, int goldCoinsToWin = 6)
+        public void PlayAGame(List<Player> players, int goldCoinsToWin = 10)
         {
 
             console.WriteLine("Do you want to replace Rock questions with Techno questions? (yes/no): ");
@@ -48,7 +48,7 @@ namespace Trivia
         }
 
         // play a game test
-        public void PlayAGameTest(List<Player> players, bool rockTechno, int goldCoinsToWin = 6)
+        public void PlayAGameTest(List<Player> players, bool rockTechno, int goldCoinsToWin = 10)
         {
             var aGame = new Game(console, rand, rockTechno, goldCoinsToWin);
 
@@ -107,15 +107,14 @@ namespace Trivia
                         break;
                     }
 
+                    console.WriteLine("Game Over! Here is the leaderboard:");
+                    for (int i = 0; i < winners.Count; i++)
+                    {
+                        console.WriteLine($"{i + 1}. {winners[i].name}");
+                    }
                     
                     message = aGame.AskReGameQuestion();
                 } while (message == "y");
-
-                console.WriteLine("Game Over! Here is the leaderboard:");
-                for (int i = 0; i < winners.Count; i++)
-                {
-                    console.WriteLine($"{i + 1}. {winners[i].name}");
-                }
             }
             catch (Exception e)
             {
