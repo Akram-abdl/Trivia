@@ -7,7 +7,10 @@ namespace Trivia
     {
         private static bool _notAWinner;
         private readonly IConsole console;
+
+        private List<Player> winners = new List<Player>();
         private Random rand;
+
 
         public static void Main(string[] args)
         {
@@ -31,8 +34,14 @@ namespace Trivia
         }
 
         // play a game
-        public void PlayAGame(List<Player> players, int goldCoinsToWin = 6)
+        public void PlayAGame(List<Player> players, int goldCoinsToWin = 2)
         {
+            if (players.Count < 2)
+            {
+                console.WriteLine("Il n'y a pas assez de joueurs pour démarrer une partie, ajoutez-en au moins 2.");
+                return;
+            }
+
             console.WriteLine("Do you want to replace Rock questions with Techno questions? (yes/no): ");
             string userPreference = Console.ReadLine();
             bool replaceRockWithTechno = userPreference.ToLower() == "yes";
@@ -43,7 +52,7 @@ namespace Trivia
         }
 
         // play a game test
-        public void PlayAGameTest(List<Player> players, bool rockTechno, int goldCoinsToWin = 6)
+        public void PlayAGameTest(List<Player> players, bool rockTechno, int goldCoinsToWin = 2)
         {
             var aGame = new Game(console, rand, rockTechno, goldCoinsToWin);
 
@@ -55,6 +64,7 @@ namespace Trivia
             string message;
             try
             {
+
                 do {
                     foreach(Player player in players) {
                         aGame.Add(player);
@@ -82,6 +92,15 @@ namespace Trivia
                     Console.WriteLine(" Voulez vous rejouer la partie avec les mêmes paramètres ? (y/n)");
                     message = Console.ReadLine();
                 } while (message == "y");
+
+                console.WriteLine("Game Over! Here is the leaderboard:");
+                for (int i = 0; i < winners.Count; i++)
+                {
+                    console.WriteLine($"{i + 1}. {winners[i].name}");
+                }
+
+              
+
             }
             catch (Exception e)
             {
