@@ -18,7 +18,7 @@ namespace Trivia
             Player player2 = new Player("Pat");
             Player player3 = new Player("Sue");
             Player player4 = new Player("Sue2");
-            new GameRunner().PlayAGame(new List<Player> { player1, player2, player3 , player4});
+            new GameRunner().PlayAGame(new List<Player> { player1, player2, player3, player4 });
         }
 
         private GameRunner()
@@ -37,11 +37,6 @@ namespace Trivia
         // play a game
         public void PlayAGame(List<Player> players, int goldCoinsToWin = 10)
         {
-            if (players.Count < 2)
-            {
-                console.WriteLine("Il n'y a pas assez de joueurs pour démarrer une partie, ajoutez-en au moins 2.");
-                return;
-            }
 
             console.WriteLine("Do you want to replace Rock questions with Techno questions? (yes/no): ");
             string userPreference = Console.ReadLine();
@@ -57,7 +52,6 @@ namespace Trivia
         {
             var aGame = new Game(console, rand, rockTechno, goldCoinsToWin);
 
-        
             Game(aGame, players);
         }
 
@@ -67,29 +61,37 @@ namespace Trivia
             try
             {
                 int numPlayersInLeaderboard = 0;
-                do {
-                    foreach(Player player in players) {
+                do
+                {
+                    foreach (Player player in players)
+                    {
                         aGame.Add(player);
                     }
 
-                    do {
+                    do
+                    {
                         bool shouldAnswer = aGame.Roll(rand.Next(5) + 1);
 
-                        if (shouldAnswer) {
-                            console.WriteLine("Do you want to answer the question? (yes/leave): ");
-                            string userAnswer = Console.ReadLine().ToLower();
+                        if (shouldAnswer)
+                        {
+                            String userAnswer = aGame.AskBoolQuestion();
 
-                            if (userAnswer == "yes") {
-                                if (rand.Next(9) == 7) {
+                            if (userAnswer == "yes")
+                            {
+                                if (rand.Next(9) == 7)
+                                {
                                     _notAWinner = aGame.WrongAnswer();
-                                } else {
-                                    _notAWinner = !aGame.WasCorrectlyAnswered();
                                 }
-                            } else if (userAnswer == "leave") {
+                                else
+                                {
+                                    _notAWinner = aGame.WasCorrectlyAnswered();
+                                }
+                            }
+                            else if (userAnswer == "leave")
+                            {
                                 _notAWinner = aGame.RemovePlayer(aGame.GetCurrentPlayer());
                             }
                         }
-
                     } while (_notAWinner);
 
                     // Check if the winning player is already in the winners list
@@ -105,14 +107,13 @@ namespace Trivia
                         break;
                     }
 
-
                     console.WriteLine("Game Over! Here is the leaderboard:");
                     for (int i = 0; i < winners.Count; i++)
                     {
                         console.WriteLine($"{i + 1}. {winners[i].name}");
                     }
-                    Console.WriteLine(" Voulez vous rejouer la partie avec les mêmes paramètres ? (y/n)");
-                    message = Console.ReadLine();
+                    
+                    message = aGame.AskReGameQuestion();
                 } while (message == "y");
             }
             catch (Exception e)
@@ -120,11 +121,5 @@ namespace Trivia
                 console.WriteLine(e.Message);
             }
         }
-
-
-
-
-
-
     }
 }

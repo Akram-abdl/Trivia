@@ -187,13 +187,14 @@ namespace Trivia
                 throw new Exception(Messages.NotEnoughPlayerException);
             }
 
-            this.console.WriteLine(_players[_currentPlayer] + " is the current player");
+            this.console.WriteLine(" ");
             this.console.WriteLine(_players[_currentPlayer].name + " is the current player");
             this.console.WriteLine("They have rolled a " + roll);
 
             if (_inPenaltyBox[_currentPlayer])
             {
-                if (rand.Next(1, (int)(_timesInPrison[_currentPlayer] * (1.0 - (0.1 * _turnInPrison[_currentPlayer])))) == 1)
+                if (rand.Next(1,
+                        (int)(_timesInPrison[_currentPlayer] * (1.0 - (0.1 * _turnInPrison[_currentPlayer])))) == 1)
                 {
                     _isGettingOutOfPenaltyBox = true;
 
@@ -230,7 +231,39 @@ namespace Trivia
             }
         }
 
+        public String AskBoolQuestion()
+        {
+            if (_players[_currentPlayer].askYesQuestion == 0)
+            {
+                console.WriteLine("Do you want to answer the question? (yes/leave): ");
+                return Console.ReadLine().ToLower();
+            }
+            else if (_players[_currentPlayer].askYesQuestion == 1)
+            {
+                return "yes";
+            }
+            else
+            {
+                return "no";
+            }
+        }
 
+        public String AskReGameQuestion()
+        {
+            if (_players[_currentPlayer].reGameQuestion == 0)
+            {
+                Console.WriteLine(" Voulez vous rejouer la partie avec les mêmes paramètres ? (y/n)");
+                return Console.ReadLine().ToLower();
+            }
+            else if (_players[_currentPlayer].askYesQuestion == 1)
+            {
+                return "y";
+            }
+            else
+            {
+                return "n";
+            }
+        }
 
         // ask a question
         private void AskQuestion()
@@ -357,7 +390,7 @@ namespace Trivia
 
                     if (DidPlayerWin())
                     {
-                        return true;
+                        return false;
                     }
 
                     _currentPlayer++;
@@ -377,14 +410,14 @@ namespace Trivia
 
                 if (DidPlayerWin())
                 {
-                    return true;
+                    return false;
                 }
 
                 _currentPlayer++;
                 if (_currentPlayer == _players.Count) _currentPlayer = 0;
             }
 
-            return false;
+            return true;
         }
 
 
@@ -415,8 +448,5 @@ namespace Trivia
                 return false;
             }
         }
-
-
     }
-
 }

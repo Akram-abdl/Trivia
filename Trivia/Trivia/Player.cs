@@ -9,7 +9,10 @@ public class Player
     public int Purse { get; set; }
     public bool InPenaltyBox { get; set; }
     public int CorrectAnswersRow { get; set; }
-    public bool askYesQuestion { get; set; }
+    // 0: null, 1: yes question asked, 2: no question asked
+    public int askYesQuestion { get; set; }
+    // 0: null, 1: yes question asked, 2: no question asked
+    public int reGameQuestion { get; set; }
     
 
     public Player(string name)
@@ -17,12 +20,15 @@ public class Player
         this.name = name;
         nbJoker = 1;
         use = false;
+        askYesQuestion = 0;
+        reGameQuestion = 0;
     }
     
-    public Player(string name, bool askYesQuestion)
+    public Player(string name, int askYesQuestion, int reGameQuestion)
     {
         this.name = name;
         this.askYesQuestion = askYesQuestion;
+        this.reGameQuestion = reGameQuestion;
         nbJoker = 1;
         use = false;
     }
