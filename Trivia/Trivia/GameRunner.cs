@@ -35,7 +35,7 @@ namespace Trivia
         }
 
         // play a game
-        public void PlayAGame(List<Player> players, int goldCoinsToWin = 2)
+        public void PlayAGame(List<Player> players, int goldCoinsToWin = 10)
         {
             if (players.Count < 2)
             {
@@ -53,7 +53,7 @@ namespace Trivia
         }
 
         // play a game test
-        public void PlayAGameTest(List<Player> players, bool rockTechno, int goldCoinsToWin = 2)
+        public void PlayAGameTest(List<Player> players, bool rockTechno, int goldCoinsToWin = 10)
         {
             var aGame = new Game(console, rand, rockTechno, goldCoinsToWin);
 
@@ -106,11 +106,11 @@ namespace Trivia
                     }
 
 
-                console.WriteLine("Game Over! Here is the leaderboard:");
-                for (int i = 0; i < winners.Count; i++)
-                {
-                    console.WriteLine($"{i + 1}. {winners[i].name}");
-                }
+                    console.WriteLine("Game Over! Here is the leaderboard:");
+                    for (int i = 0; i < winners.Count; i++)
+                    {
+                        console.WriteLine($"{i + 1}. {winners[i].name}");
+                    }
                     Console.WriteLine(" Voulez vous rejouer la partie avec les mêmes paramètres ? (y/n)");
                     message = Console.ReadLine();
                 } while (message == "y");
