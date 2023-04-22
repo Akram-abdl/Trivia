@@ -79,8 +79,8 @@ namespace Trivia
                         bool shouldAnswer = aGame.Roll(rand.Next(5) + 1);
 
                         if (shouldAnswer) {
-                            console.WriteLine("Do you want to answer the question? (yes/leave): ");
-                            string userAnswer = Console.ReadLine().ToLower();
+                            string userAnswer = aGame.AskBoolQuestion();
+                            
                             string jokAnswer = "";
                             if (userAnswer == "yes") {
                                 if (aGame.haveJok())
@@ -90,8 +90,9 @@ namespace Trivia
                                 }
                                 if (jokAnswer == "yes")
                                 {
-                                    _notAWinner = !aGame.WasCorrectlyAnswered(true);
-                                }else
+                                    _notAWinner = aGame.WasCorrectlyAnswered(true);
+                                }
+                                else
                                 {
                                     if (rand.Next(9) == 7)
                                     {
@@ -99,7 +100,7 @@ namespace Trivia
                                     }
                                     else
                                     {
-                                        _notAWinner = !aGame.WasCorrectlyAnswered();
+                                        _notAWinner = aGame.WasCorrectlyAnswered();
                                     }
                                 }
                                 

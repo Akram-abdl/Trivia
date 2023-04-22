@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Tests;
 
-public class NumberPlayerTest
+public class PlayerTest
 {
     [Fact]
     public void LessThan2()
