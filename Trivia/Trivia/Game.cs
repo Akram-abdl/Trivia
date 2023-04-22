@@ -204,7 +204,7 @@ namespace Trivia
                     if (_places[_currentPlayer] >= HowManyPlaces) _places[_currentPlayer] -= HowManyPlaces;
 
                     this.console.WriteLine(_players[_currentPlayer].name
-                                           + "'s new location is "
+                                           + " is new location is "
                                            + _places[_currentPlayer]);
                     this.console.WriteLine("The category is " + CurrentCategory());
                     AskQuestion();
@@ -223,7 +223,7 @@ namespace Trivia
                 if (_places[_currentPlayer] >= HowManyPlaces) _places[_currentPlayer] -= HowManyPlaces;
 
                 this.console.WriteLine(_players[_currentPlayer].name
-                                       + "'s new location is "
+                                       + " is new location is "
                                        + _places[_currentPlayer]);
                 this.console.WriteLine("The category is " + CurrentCategory());
                 AskQuestion();
@@ -244,7 +244,7 @@ namespace Trivia
             }
             else
             {
-                return "no";
+                return "leave";
             }
         }
 
