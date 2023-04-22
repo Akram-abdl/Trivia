@@ -55,39 +55,30 @@ namespace Trivia
             string message;
             try
             {
-                do { 
-                foreach (Player player in players)
-                {
-                    aGame.Add(player);
-                }
-
-                do
-                {
-                    bool shouldAnswer = aGame.Roll(rand.Next(5) + 1);
-
-                    if (shouldAnswer)
-                    {
-                        console.WriteLine("Do you want to answer the question? (yes/leave): ");
-                        string userAnswer = Console.ReadLine().ToLower();
-
-                        if (userAnswer == "yes")
-                        {
-                            if (rand.Next(9) == 7)
-                            {
-                                _notAWinner = aGame.WrongAnswer();
-                            }
-                            else
-                            {
-                                _notAWinner = aGame.WasCorrectlyAnswered();
-                            }
-                        }
-                        else if (userAnswer == "leave")
-                        {
-                           ;
-                           _notAWinner = aGame.RemovePlayer(aGame.GetCurrentPlayer());
-                        }
+                do {
+                    foreach(Player player in players) {
+                        aGame.Add(player);
                     }
-                } while (_notAWinner);
+
+                    do {
+                        bool shouldAnswer = aGame.Roll(rand.Next(5) + 1);
+
+                        if (shouldAnswer) {
+                            console.WriteLine("Do you want to answer the question? (yes/leave): ");
+                            string userAnswer = Console.ReadLine().ToLower();
+
+                            if (userAnswer == "yes") {
+                                if (rand.Next(9) == 7) {
+                                    _notAWinner = aGame.WrongAnswer();
+                                } else {
+                                    _notAWinner = aGame.WasCorrectlyAnswered();
+                                }
+                            } else if (userAnswer == "leave") {
+                                ;
+                                _notAWinner = aGame.RemovePlayer(aGame.GetCurrentPlayer());
+                            }
+                        }
+                    } while (_notAWinner);
                     Console.WriteLine(" Voulez vous rejouer la partie avec les mêmes paramètres ? (y/n)");
                     message = Console.ReadLine();
                 } while (message == "y");
