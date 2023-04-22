@@ -96,11 +96,12 @@ namespace Trivia
             return true;
         }
 
-        // how many players are in the game
+        // how many players are in the game at this moment
         public int HowManyPlayers()
         {
             return _players.Count;
         }
+        
         public bool RemovePlayer(Player player)
         {
             int playerIndex = _players.IndexOf(player);
@@ -117,7 +118,6 @@ namespace Trivia
                 Array.Copy(_purses, playerIndex + 1, _purses, playerIndex, length);
                 Array.Copy(_inPenaltyBox, playerIndex + 1, _inPenaltyBox, playerIndex, length);
             }
-
 
             if (_currentPlayer >= playerIndex)
             {
@@ -250,8 +250,10 @@ namespace Trivia
 
 
         // if the player answered correctly
-        public bool WasCorrectlyAnswered()
+        public Player WasCorrectlyAnswered()
         {
+            Player winner = null;
+
             if (_inPenaltyBox[_currentPlayer])
             {
                 if (_isGettingOutOfPenaltyBox)
@@ -261,66 +263,71 @@ namespace Trivia
                     int bourse = int.Parse(_purses[_currentPlayer].ToString());
                     _purses[_currentPlayer] = bourse + temp;
 
-                    this.console.WriteLine("Answer was correct!!!!");
+                    console.WriteLine("Answer was correct!!!!");
                     _purses[_currentPlayer]++;
-                    this.console.WriteLine(_players[_currentPlayer].name
-                                           + " now has "
-                                           + _purses[_currentPlayer]
-                                           + " Gold Coins.");
+                    console.WriteLine(_players[_currentPlayer].name
+                                      + " now has "
+                                      + _purses[_currentPlayer]
+                                      + " Gold Coins.");
 
-                    var winner = DidPlayerWin();
+                    if (DidPlayerWin())
+                    {
+                        winner = _players[_currentPlayer];
+                    }
+
                     _currentPlayer++;
                     if (_currentPlayer == _players.Count) _currentPlayer = 0;
-
-                    return winner;
                 }
                 else
                 {
                     _currentPlayer++;
                     if (_currentPlayer == _players.Count) _currentPlayer = 0;
-                    return true;
                 }
             }
             else
             {
-                int temp = int.Parse(corectanswerRow[_currentPlayer].ToString());
-                corectanswerRow[_currentPlayer] = temp + 1;
-                int bourse = int.Parse(_purses[_currentPlayer].ToString());
-                _purses[_currentPlayer] = bourse + temp;
-
-                this.console.WriteLine("Answer was corrent!!!!");
+                console.WriteLine("Answer was correct!!!!");
                 _purses[_currentPlayer]++;
-                this.console.WriteLine(_players[_currentPlayer].name
-                                       + " now has "
-                                       + _purses[_currentPlayer]
-                                       + " Gold Coins.");
+                console.WriteLine($"{_players[_currentPlayer]} now has {_purses[_currentPlayer]} Gold Coins.");
 
-                var winner = DidPlayerWin();
+                if (DidPlayerWin())
+                {
+                    winner = _players[_currentPlayer];
+                }
+
                 _currentPlayer++;
                 if (_currentPlayer == _players.Count) _currentPlayer = 0;
-
-                return winner;
             }
+
+            return winner;
         }
 
-        // if the player answered incorrectly
-        public bool WrongAnswer()
+
+        // if the player answered wrong
+        public void WrongAnswer()
         {
-            corectanswerRow[_currentPlayer] = 0;
-            this.console.WriteLine("Question was incorrectly answered");
-            this.console.WriteLine(_players[_currentPlayer].name + " was sent to the penalty box");
+            console.WriteLine("Question was incorrectly answered");
+            console.WriteLine($"{_players[_currentPlayer]} was sent to the penalty box");
             _inPenaltyBox[_currentPlayer] = true;
 
             _currentPlayer++;
             if (_currentPlayer == _players.Count) _currentPlayer = 0;
-            return true;
         }
 
-        // check if the player won
         private bool DidPlayerWin()
         {
-            return !(_purses[_currentPlayer] >= _goldCoinsToWin);
+            if (_purses[_currentPlayer] == _goldCoinsToWin)
+            {
+                console.WriteLine($"{_players[_currentPlayer]} has won the game with {_purses[_currentPlayer]} Gold Coins!");
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
+
+
     }
 
 }
