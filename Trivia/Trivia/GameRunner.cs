@@ -46,16 +46,22 @@ namespace Trivia
             console.WriteLine("Do you want to replace Rock questions with Techno questions? (yes/no): ");
             string userPreference = Console.ReadLine();
             bool replaceRockWithTechno = userPreference.ToLower() == "yes";
+            
+            console.WriteLine("How many places you want in the penalty box ?");
+            userPreference = Console.ReadLine();
+            int penaltyBoxNumberOfPlaces = Int32.Parse(userPreference);
+            penaltyBoxNumberOfPlaces = penaltyBoxNumberOfPlaces > 6 ? 6 : penaltyBoxNumberOfPlaces;
+            penaltyBoxNumberOfPlaces = penaltyBoxNumberOfPlaces < 0 ? 0 : penaltyBoxNumberOfPlaces;
 
-            var aGame = new Game(console, rand, replaceRockWithTechno, goldCoinsToWin);
+            var aGame = new Game(console, rand, replaceRockWithTechno, goldCoinsToWin, penaltyBoxNumberOfPlaces);
 
             Game(aGame, players);
         }
 
         // play a game test
-        public void PlayAGameTest(List<Player> players, bool rockTechno, int goldCoinsToWin = 2)
+        public void PlayAGameTest(List<Player> players, bool rockTechno, int goldCoinsToWin = 2, int penaltyBoxNumberOfPlaces = 0)
         {
-            var aGame = new Game(console, rand, rockTechno, goldCoinsToWin);
+            var aGame = new Game(console, rand, rockTechno, goldCoinsToWin, penaltyBoxNumberOfPlaces);
 
             Game(aGame, players);
         }
