@@ -38,7 +38,7 @@ namespace Trivia
             _replaceRockWithTechno = replaceRockWithTechno;
             _goldCoinsToWin = goldCoinsToWin;
             this.rand = rand;
-            
+
             for (var i = 0; i < 50; i++)
             {
                 _popQuestions.AddLast(CreatePopQuestion(i));
@@ -60,20 +60,22 @@ namespace Trivia
         {
             return "Pop Question " + index;
         }
-        
+
         public string CreateScienceQuestion(int index)
         {
             return "Science Question " + index;
         }
-        
+
         public string CreateSportsQuestion(int index)
         {
             return "Sports Question " + index;
         }
+
         public string CreateRockQuestion(int index)
         {
             return "Rock Question " + index;
         }
+
         public string CreateTechnoQuestion(int index)
         {
             return "Techno Question " + index;
@@ -90,15 +92,15 @@ namespace Trivia
         {
             if (HowManyPlayers() == 6)
                 throw new Exception(Messages.TooManyPlayerException);
-            
+
             _players.Add(player);
             _places[HowManyPlayers() - 1] = 0;
             _purses[HowManyPlayers() - 1] = 0;
             _timesInPrison[HowManyPlayers() - 1] = 0;
             _turnInPrison[HowManyPlayers() - 1] = 0;
             corectanswerRow[HowManyPlayers() - 1] = 0;
-            _inPenaltyBox[HowManyPlayers()-1] = false;
-            
+            _inPenaltyBox[HowManyPlayers() - 1] = false;
+
             this.console.WriteLine(player + " was added");
             this.console.WriteLine("They are player number " + _players.Count);
             return true;
@@ -109,7 +111,7 @@ namespace Trivia
         {
             return _players.Count;
         }
-        
+
         public bool RemovePlayer(Player player)
         {
             int playerIndex = _players.IndexOf(player);
@@ -131,16 +133,18 @@ namespace Trivia
             {
                 _currentPlayer = _currentPlayer > 0 ? _currentPlayer - 1 : _players.Count - 1;
             }
+
             this.console.WriteLine(player + " has left the game.");
 
             return IsPlayable(); // return whether the game is still playable after removing the player
         }
 
-        
+
         public Player GetCurrentPlayer()
         {
             return _players[_currentPlayer];
         }
+
         // roll the dice
         public bool Roll(int roll)
         {
@@ -153,7 +157,8 @@ namespace Trivia
 
             if (_inPenaltyBox[_currentPlayer])
             {
-                if (rand.Next(1, (int)(_timesInPrison[_currentPlayer] * (1.0 - (0.1 * _turnInPrison[_currentPlayer])))) == 1)
+                if (rand.Next(1,
+                        (int)(_timesInPrison[_currentPlayer] * (1.0 - (0.1 * _turnInPrison[_currentPlayer])))) == 1)
                 {
                     _isGettingOutOfPenaltyBox = true;
 
@@ -163,8 +168,8 @@ namespace Trivia
                     if (_places[_currentPlayer] > 11) _places[_currentPlayer] -= 12;
 
                     this.console.WriteLine(_players[_currentPlayer].name
-                            + "'s new location is "
-                            + _places[_currentPlayer]);
+                                           + "'s new location is "
+                                           + _places[_currentPlayer]);
                     this.console.WriteLine("The category is " + CurrentCategory());
                     AskQuestion();
                 }
@@ -174,6 +179,7 @@ namespace Trivia
                     _isGettingOutOfPenaltyBox = false;
                     _turnInPrison[_currentPlayer]++;
                 }
+
                 return _isGettingOutOfPenaltyBox;
             }
             else
@@ -182,8 +188,8 @@ namespace Trivia
                 if (_places[_currentPlayer] > 11) _places[_currentPlayer] -= 12;
 
                 this.console.WriteLine(_players[_currentPlayer].name
-                        + "'s new location is "
-                        + _places[_currentPlayer]);
+                                       + "'s new location is "
+                                       + _places[_currentPlayer]);
                 this.console.WriteLine("The category is " + CurrentCategory());
                 AskQuestion();
                 return true;
@@ -195,15 +201,32 @@ namespace Trivia
             if (_players[_currentPlayer].askYesQuestion == 0)
             {
                 console.WriteLine("Do you want to answer the question? (yes/leave): ");
-                return  Console.ReadLine().ToLower();
+                return Console.ReadLine().ToLower();
             }
-                else if (_players[_currentPlayer].askYesQuestion == 1)
+            else if (_players[_currentPlayer].askYesQuestion == 1)
             {
                 return "yes";
             }
             else
             {
                 return "no";
+            }
+        }
+
+        public String AskReGameQuestion()
+        {
+            if (_players[_currentPlayer].reGameQuestion == 0)
+            {
+                Console.WriteLine(" Voulez vous rejouer la partie avec les mêmes paramètres ? (y/n)");
+                return Console.ReadLine().ToLower();
+            }
+            else if (_players[_currentPlayer].askYesQuestion == 1)
+            {
+                return "y";
+            }
+            else
+            {
+                return "n";
             }
         }
 
@@ -216,31 +239,34 @@ namespace Trivia
                 _popQuestions.AddLast(CreatePopQuestion(currentQuestionIndex++));
                 _popQuestions.RemoveFirst();
             }
+
             if (CurrentCategory() == "Science")
             {
                 this.console.WriteLine(_scienceQuestions.First());
                 _scienceQuestions.AddLast(CreateScienceQuestion(currentQuestionIndex++));
                 _scienceQuestions.RemoveFirst();
             }
+
             if (CurrentCategory() == "Sports")
             {
                 this.console.WriteLine(_sportsQuestions.First());
                 _sportsQuestions.AddLast(CreateSportsQuestion(currentQuestionIndex++));
                 _sportsQuestions.RemoveFirst();
             }
+
             if (CurrentCategory() == "Rock" && !_technoQuestions.Any())
             {
                 this.console.WriteLine(_rockQuestions.First());
                 _rockQuestions.AddLast(CreateRockQuestion(currentQuestionIndex++));
                 _rockQuestions.RemoveFirst();
             }
+
             if (CurrentCategory() == "Techno")
             {
                 this.console.WriteLine(_technoQuestions.First());
                 _technoQuestions.AddLast(CreateTechnoQuestion(currentQuestionIndex++));
                 _technoQuestions.RemoveFirst();
             }
-
         }
 
         // current category
@@ -252,24 +278,26 @@ namespace Trivia
             if (_players[_currentPlayer].nbJoker == 1)
             {
                 console.WriteLine("Do you want to use your joker ?");
-                
-                if (Console.ReadLine() == 'y'.ToString()) 
+
+                if (Console.ReadLine() == 'y'.ToString())
                 {
                     _players[_currentPlayer].nbJoker++;
                     _players[_currentPlayer].use = true;
-                   val = true;
+                    val = true;
                 }
-                
-
             }
+
             return val;
-            
         }
+
         private string CurrentCategory()
         {
-            if (_places[_currentPlayer] == 0 || _places[_currentPlayer] == 4 || _places[_currentPlayer] == 8) return "Pop";
-            if (_places[_currentPlayer] == 1 || _places[_currentPlayer] == 5 || _places[_currentPlayer] == 9) return "Science";
-            if (_places[_currentPlayer] == 2 || _places[_currentPlayer] == 6 || _places[_currentPlayer] == 10) return "Sports";
+            if (_places[_currentPlayer] == 0 || _places[_currentPlayer] == 4 || _places[_currentPlayer] == 8)
+                return "Pop";
+            if (_places[_currentPlayer] == 1 || _places[_currentPlayer] == 5 || _places[_currentPlayer] == 9)
+                return "Science";
+            if (_places[_currentPlayer] == 2 || _places[_currentPlayer] == 6 || _places[_currentPlayer] == 10)
+                return "Sports";
             if (_technoQuestions.Any()) return "Techno";
             return "Rock";
         }
@@ -296,7 +324,7 @@ namespace Trivia
 
                     if (DidPlayerWin())
                     {
-                        return true;
+                        return false;
                     }
 
                     _currentPlayer++;
@@ -316,16 +344,15 @@ namespace Trivia
 
                 if (DidPlayerWin())
                 {
-                    return true;
+                    return false;
                 }
 
                 _currentPlayer++;
                 if (_currentPlayer == _players.Count) _currentPlayer = 0;
             }
 
-            return false;
+            return true;
         }
-
 
 
         // if the player answered wrong
@@ -346,7 +373,8 @@ namespace Trivia
         {
             if (_purses[_currentPlayer] == _goldCoinsToWin)
             {
-                console.WriteLine($"{_players[_currentPlayer]} has won the game with {_purses[_currentPlayer]} Gold Coins!");
+                console.WriteLine(
+                    $"{_players[_currentPlayer]} has won the game with {_purses[_currentPlayer]} Gold Coins!");
                 return true;
             }
             else
@@ -354,8 +382,5 @@ namespace Trivia
                 return false;
             }
         }
-
-
     }
-
 }

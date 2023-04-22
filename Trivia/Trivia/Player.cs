@@ -11,6 +11,8 @@ public class Player
     public int CorrectAnswersRow { get; set; }
     // 0: null, 1: yes question asked, 2: no question asked
     public int askYesQuestion { get; set; }
+    // 0: null, 1: yes question asked, 2: no question asked
+    public int reGameQuestion { get; set; }
     
 
     public Player(string name)
@@ -19,12 +21,14 @@ public class Player
         nbJoker = 1;
         use = false;
         askYesQuestion = 0;
+        reGameQuestion = 0;
     }
     
-    public Player(string name, int askYesQuestion)
+    public Player(string name, int askYesQuestion, int reGameQuestion)
     {
         this.name = name;
         this.askYesQuestion = askYesQuestion;
+        this.reGameQuestion = reGameQuestion;
         nbJoker = 1;
         use = false;
     }
