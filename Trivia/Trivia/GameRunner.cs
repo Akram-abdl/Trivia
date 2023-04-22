@@ -8,58 +8,71 @@ namespace Trivia
         private static bool _notAWinner;
         private readonly IConsole console;
 
+        private List<Player> winners = new List<Player>();
+        private Random rand;
+
+
         public static void Main(string[] args)
         {
             Player player1 = new Player("Chet");
             Player player2 = new Player("Pat");
             Player player3 = new Player("Sue");
-            new GameRunner().PlayAGame(new List<Player> { player1, player2, player3 });
+            Player player4 = new Player("Sue2");
+            new GameRunner().PlayAGame(new List<Player> { player1, player2, player3 , player4});
         }
 
         private GameRunner()
         {
             console = new SystemConsole();
+            rand = new Random();
+            console.WriteLine(rand.Next(1, 1).ToString());
         }
 
         public GameRunner(IConsole console)
         {
             this.console = console;
+            rand = new Random();
         }
 
         // play a game
-        public void PlayAGame(List<Player> players, int goldCoinsToWin = 6)
+        public void PlayAGame(List<Player> players, int goldCoinsToWin = 2)
         {
+            if (players.Count < 2)
+            {
+                console.WriteLine("Il n'y a pas assez de joueurs pour démarrer une partie, ajoutez-en au moins 2.");
+                return;
+            }
+
             console.WriteLine("Do you want to replace Rock questions with Techno questions? (yes/no): ");
             string userPreference = Console.ReadLine();
             bool replaceRockWithTechno = userPreference.ToLower() == "yes";
 
-            var aGame = new Game(console, replaceRockWithTechno, goldCoinsToWin);
+            var aGame = new Game(console, rand, replaceRockWithTechno, goldCoinsToWin);
 
             Game(aGame, players);
         }
 
         // play a game test
-        public void PlayAGameTest(List<Player> players, bool rockTechno, int goldCoinsToWin = 6)
+        public void PlayAGameTest(List<Player> players, bool rockTechno, int goldCoinsToWin = 2)
         {
-            var aGame = new Game(console, rockTechno, goldCoinsToWin);
+            var aGame = new Game(console, rand, rockTechno, goldCoinsToWin);
 
             Game(aGame, players);
         }
 
         public void Game(Game aGame, List<Player> players)
         {
+            string message;
             try
             {
-                foreach (Player player in players)
-                {
-                    aGame.Add(player);
-                }
+                int numPlayersInLeaderboard = 0;
+                do {
+                    foreach(Player player in players) {
+                        aGame.Add(player);
+                    }
 
-                var rand = new Random();
-
-                do
-                {
-                    bool shouldAnswer = aGame.Roll(rand.Next(5) + 1);
+                    do {
+                        bool shouldAnswer = aGame.Roll(rand.Next(5) + 1);
 
                     if (shouldAnswer)
                     {
@@ -89,5 +102,6 @@ namespace Trivia
                 console.WriteLine(e.Message);
             }
         }
+
     }
 }
