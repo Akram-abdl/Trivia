@@ -201,7 +201,7 @@ namespace Trivia
                     this.console.WriteLine(_players[_currentPlayer].name + " is getting out of the penalty box");
                     _inPenaltyBox[_currentPlayer] = false;
                     _places[_currentPlayer] += roll;
-                    if (_places[_currentPlayer] >= HowManyPlaces) _places[_currentPlayer] -= HowManyPlaces;
+                    if (_places[_currentPlayer] > HowManyPlaces) _places[_currentPlayer] -= HowManyPlaces+1;
 
                     this.console.WriteLine(_players[_currentPlayer].name
                                            + " is new location is "
@@ -220,7 +220,7 @@ namespace Trivia
             else
             {
                 _places[_currentPlayer] += roll;
-                if (_places[_currentPlayer] >= HowManyPlaces) _places[_currentPlayer] -= HowManyPlaces;
+                if (_places[_currentPlayer] > HowManyPlaces) _places[_currentPlayer] -= HowManyPlaces+1;
 
                 this.console.WriteLine(_players[_currentPlayer].name
                                        + " is new location is "
@@ -355,17 +355,17 @@ namespace Trivia
         }
         private string CurrentCategory()
         {
-            if (_places[_currentPlayer] == 0 || _places[_currentPlayer] == 4 || _places[_currentPlayer] == 8) return "Pop";
-            if (_places[_currentPlayer] == 1 || _places[_currentPlayer] == 5 || _places[_currentPlayer] == 9) return "Science";
-            if (_places[_currentPlayer] == 2 || _places[_currentPlayer] == 6 || _places[_currentPlayer] == 10) return "Sports";
-            if (_places[_currentPlayer] == 3 || _places[_currentPlayer] == 7) return "Rock";
-            if (_places[_currentPlayer] == 11) return "Rap";
-            if (_places[_currentPlayer] == 12) return "Philosophy";
-            if (_places[_currentPlayer] == 13) return "Literature";
+            if (_places[_currentPlayer] == 0 || _places[_currentPlayer] == 4 ) return "Pop";
+            if (_places[_currentPlayer] == 1 || _places[_currentPlayer] == 5 ) return "Science";
+            if (_places[_currentPlayer] == 2 || _places[_currentPlayer] == 6 ) return "Sports";
+            if (_places[_currentPlayer] == 3 || _places[_currentPlayer] == 7) return "People";
+            if (_places[_currentPlayer] == 11 || _places[_currentPlayer] == 8) return "Rap";
+            if (_places[_currentPlayer] == 12 || _places[_currentPlayer] == 9) return "Philosophy";
+            if (_places[_currentPlayer] == 13|| _places[_currentPlayer] == 10) return "Literature";
             if (_places[_currentPlayer] == 14) return "Geography";
             if (_technoQuestions.Any()) return "Techno";
             
-            return "People";
+            return "Rock";
         }
 
 
