@@ -17,7 +17,8 @@ namespace Trivia
             Player player1 = new Player("Chet");
             Player player2 = new Player("Pat");
             Player player3 = new Player("Sue");
-            new GameRunner().PlayAGame(new List<Player> { player1, player2, player3 });
+            Player player4 = new Player("Sue2");
+            new GameRunner().PlayAGame(new List<Player> { player1, player2, player3 , player4});
         }
 
         private GameRunner()
@@ -64,7 +65,7 @@ namespace Trivia
             string message;
             try
             {
-
+                int numPlayersInLeaderboard = 0;
                 do {
                     foreach(Player player in players) {
                         aGame.Add(player);
@@ -81,14 +82,28 @@ namespace Trivia
                                 if (rand.Next(9) == 7) {
                                     _notAWinner = aGame.WrongAnswer();
                                 } else {
-                                    _notAWinner = aGame.WasCorrectlyAnswered();
+                                    _notAWinner = !aGame.WasCorrectlyAnswered();
                                 }
                             } else if (userAnswer == "leave") {
-                                ;
                                 _notAWinner = aGame.RemovePlayer(aGame.GetCurrentPlayer());
                             }
                         }
+
                     } while (_notAWinner);
+
+                    // Check if the winning player is already in the winners list
+                    Player winner = aGame.GetCurrentPlayer();
+                    if (!winners.Contains(winner))
+                    {
+                        winners.Add(winner);
+                        numPlayersInLeaderboard++;
+                    }
+
+                    if (numPlayersInLeaderboard >= 3 || players.Count == 0)
+                    {
+                        break;
+                    }
+
                     Console.WriteLine(" Voulez vous rejouer la partie avec les mêmes paramètres ? (y/n)");
                     message = Console.ReadLine();
                 } while (message == "y");
@@ -98,15 +113,17 @@ namespace Trivia
                 {
                     console.WriteLine($"{i + 1}. {winners[i].name}");
                 }
-
-              
-
             }
             catch (Exception e)
             {
                 console.WriteLine(e.Message);
             }
         }
+
+
+
+
+
 
     }
 }

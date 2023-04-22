@@ -259,10 +259,8 @@ namespace Trivia
 
 
         // if the player answered correctly
-        public Player WasCorrectlyAnswered()
+        public bool WasCorrectlyAnswered()
         {
-            Player winner = null;
-
             if (_inPenaltyBox[_currentPlayer])
             {
                 if (_isGettingOutOfPenaltyBox)
@@ -281,7 +279,7 @@ namespace Trivia
 
                     if (DidPlayerWin())
                     {
-                        winner = _players[_currentPlayer];
+                        return true;
                     }
 
                     _currentPlayer++;
@@ -301,19 +299,20 @@ namespace Trivia
 
                 if (DidPlayerWin())
                 {
-                    winner = _players[_currentPlayer];
+                    return true;
                 }
 
                 _currentPlayer++;
                 if (_currentPlayer == _players.Count) _currentPlayer = 0;
             }
 
-            return winner;
+            return false;
         }
 
 
+
         // if the player answered wrong
-        public void WrongAnswer()
+        public bool WrongAnswer()
         {
             console.WriteLine("Question was incorrectly answered");
             console.WriteLine($"{_players[_currentPlayer]} was sent to the penalty box");
@@ -323,6 +322,7 @@ namespace Trivia
 
             _currentPlayer++;
             if (_currentPlayer == _players.Count) _currentPlayer = 0;
+            return true;
         }
 
         private bool DidPlayerWin()
