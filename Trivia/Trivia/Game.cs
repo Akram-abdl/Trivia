@@ -228,7 +228,7 @@ namespace Trivia
 
         // current category
 
-        public bool askJoker()
+        public bool useJoker()
 
         {
             bool val = false;
@@ -259,7 +259,7 @@ namespace Trivia
 
 
         // if the player answered correctly
-        public bool WasCorrectlyAnswered()
+        public bool WasCorrectlyAnswered(bool useJoker = false)
         {
             if (_inPenaltyBox[_currentPlayer])
             {
@@ -270,12 +270,22 @@ namespace Trivia
                     int bourse = int.Parse(_purses[_currentPlayer].ToString());
                     _purses[_currentPlayer] = bourse + temp;
 
-                    console.WriteLine("Answer was correct!!!!");
-                    _purses[_currentPlayer]++;
-                    console.WriteLine(_players[_currentPlayer].name
-                                      + " now has "
-                                      + _purses[_currentPlayer]
-                                      + " Gold Coins.");
+                   
+                    if (useJoker == true)
+                    {
+                        _players[_currentPlayer].nbJoker--;
+                        console.WriteLine("You use your joker so passed the question but you didn't won any Gold coin");
+                    }
+                    else
+                    {
+                        console.WriteLine("Answer was correct!!!!");
+                        _purses[_currentPlayer]++;
+                        console.WriteLine(_players[_currentPlayer].name
+                                          + " now has "
+                                          + _purses[_currentPlayer]
+                                          + " Gold Coins.");
+                    }
+                    
 
                     if (DidPlayerWin())
                     {
@@ -293,9 +303,18 @@ namespace Trivia
             }
             else
             {
-                console.WriteLine("Answer was correct!!!!");
-                _purses[_currentPlayer]++;
-                console.WriteLine($"{_players[_currentPlayer]} now has {_purses[_currentPlayer]} Gold Coins.");
+                if (useJoker == true)
+                {
+                    _players[_currentPlayer].nbJoker--;
+                    console.WriteLine("You use your joker so passed the question but you didn't won any Gold coin");
+                }
+                else
+                {
+                    console.WriteLine("Answer was correct!!!!");
+                    _purses[_currentPlayer]++;
+                    console.WriteLine($"{_players[_currentPlayer]} now has {_purses[_currentPlayer]} Gold Coins.");
+                }
+                
 
                 if (DidPlayerWin())
                 {
@@ -323,6 +342,16 @@ namespace Trivia
             _currentPlayer++;
             if (_currentPlayer == _players.Count) _currentPlayer = 0;
             return true;
+        }
+
+        public bool haveJok()
+        {
+            bool haveJok = false;
+            if (_players[_currentPlayer].nbJoker > 0)
+            {
+                haveJok = true;
+            }
+            return haveJok;
         }
 
         private bool DidPlayerWin()

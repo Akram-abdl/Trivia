@@ -78,13 +78,28 @@ namespace Trivia
                         if (shouldAnswer) {
                             console.WriteLine("Do you want to answer the question? (yes/leave): ");
                             string userAnswer = Console.ReadLine().ToLower();
-
+                            string jokAnswer = "";
                             if (userAnswer == "yes") {
-                                if (rand.Next(9) == 7) {
-                                    _notAWinner = aGame.WrongAnswer();
-                                } else {
-                                    _notAWinner = !aGame.WasCorrectlyAnswered();
+                                if (aGame.haveJok())
+                                {
+                                    console.WriteLine("use joke?");
+                                    jokAnswer = Console.ReadLine().ToLower();
                                 }
+                                if (jokAnswer == "yes")
+                                {
+                                    _notAWinner = !aGame.WasCorrectlyAnswered(true);
+                                }else
+                                {
+                                    if (rand.Next(9) == 7)
+                                    {
+                                        _notAWinner = aGame.WrongAnswer();
+                                    }
+                                    else
+                                    {
+                                        _notAWinner = !aGame.WasCorrectlyAnswered();
+                                    }
+                                }
+                                
                             } else if (userAnswer == "leave") {
                                 _notAWinner = aGame.RemovePlayer(aGame.GetCurrentPlayer());
                             }
