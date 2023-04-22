@@ -82,7 +82,7 @@ namespace Trivia
                             if (userAnswer == "yes") {
                                 if (aGame.haveJok())
                                 {
-                                    console.WriteLine("use joke?");
+                                    console.WriteLine("Do you want to use your joker? (yes/no): ");
                                     jokAnswer = Console.ReadLine().ToLower();
                                 }
                                 if (jokAnswer == "yes")
