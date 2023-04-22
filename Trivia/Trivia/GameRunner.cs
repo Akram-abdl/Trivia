@@ -57,6 +57,7 @@ namespace Trivia
         {
             var aGame = new Game(console, rand, rockTechno, goldCoinsToWin);
 
+        
             Game(aGame, players);
         }
 
@@ -104,15 +105,15 @@ namespace Trivia
                         break;
                     }
 
-                    Console.WriteLine(" Voulez vous rejouer la partie avec les mêmes paramètres ? (y/n)");
-                    message = Console.ReadLine();
-                } while (message == "y");
 
                 console.WriteLine("Game Over! Here is the leaderboard:");
                 for (int i = 0; i < winners.Count; i++)
                 {
                     console.WriteLine($"{i + 1}. {winners[i].name}");
                 }
+                    Console.WriteLine(" Voulez vous rejouer la partie avec les mêmes paramètres ? (y/n)");
+                    message = Console.ReadLine();
+                } while (message == "y");
             }
             catch (Exception e)
             {
