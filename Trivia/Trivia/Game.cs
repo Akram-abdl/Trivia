@@ -252,7 +252,7 @@ namespace Trivia
         {
             if (_players[_currentPlayer].reGameQuestion == 0)
             {
-                Console.WriteLine(" Voulez vous rejouer la partie avec les mêmes paramètres ? (y/n)");
+                console.WriteLine(" Voulez vous rejouer la partie avec les mêmes paramètres ? (y/n)");
                 return Console.ReadLine().ToLower();
             }
             else if (_players[_currentPlayer].askYesQuestion == 1)
