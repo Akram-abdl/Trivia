@@ -294,7 +294,7 @@ namespace Trivia
         {
             if (_players[_currentPlayer].askJokerQuestion == 0)
             {
-                console.WriteLine(" Do you want to use your joker? (yes/no)");
+                console.WriteLine(" Do you want to use your joker "+ _players[_currentPlayer].name +" ? (yes/no)");
                 return Console.ReadLine().ToLower();
             }
             else if (_players[_currentPlayer].askJokerQuestion == 1)
@@ -406,7 +406,7 @@ namespace Trivia
                     if (useJoker == true)
                     {
                         _players[_currentPlayer].nbJoker--;
-                        console.WriteLine("You use your joker so passed the question but you didn't won any Gold coin");
+                        console.WriteLine( _players[_currentPlayer].name + " , You use your joker so passed the question but you didn't won any Gold coin");
                     }
                     else
                     {
@@ -437,7 +437,7 @@ namespace Trivia
                 if (useJoker == true)
                 {
                     _players[_currentPlayer].nbJoker--;
-                    console.WriteLine("You use your joker so passed the question but you didn't won any Gold coin");
+                    console.WriteLine( _players[_currentPlayer].name + " , You use your joker so passed the question but you didn't won any Gold coin");
                 }
                 else
                 {

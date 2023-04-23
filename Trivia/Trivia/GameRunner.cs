@@ -102,7 +102,7 @@ namespace Trivia
                                     }
                                 }
                                 
-                            } else if (userAnswer == "leave") {
+                            } else {
 
                                 _notAWinner = aGame.RemovePlayer(aGame.GetCurrentPlayer());
                             }
