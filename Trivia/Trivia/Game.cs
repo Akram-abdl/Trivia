@@ -161,7 +161,7 @@ namespace Trivia
             }
 
             _players.RemoveAt(playerIndex);
-            int length = _players.Count - playerIndex - 1;
+            int length = _players.Count - playerIndex;
             if (length > 0)
             {
                 Array.Copy(_places, playerIndex + 1, _places, playerIndex, length);
@@ -169,16 +169,20 @@ namespace Trivia
                 Array.Copy(_inPenaltyBox, playerIndex + 1, _inPenaltyBox, playerIndex, length);
             }
 
-            if (_currentPlayer >= playerIndex)
+            _currentPlayer = playerIndex < _currentPlayer ? _currentPlayer - 1 : _currentPlayer;
+
+            for (int i = 0; i < _orderInPenaltyBox.Count; i++)
             {
-                _currentPlayer = _currentPlayer > 0 ? _currentPlayer - 1 : _players.Count - 1;
+                if (_orderInPenaltyBox.ElementAt(i) > playerIndex)
+                    _orderInPenaltyBox.Remove(_orderInPenaltyBox.ElementAt(i - 1));
             }
 
-            LinkedListNode<int> indexInPenaltyBox = _orderInPenaltyBox.Find(playerIndex);
-            if(indexInPenaltyBox != null)
-                _orderInPenaltyBox.Remove(indexInPenaltyBox);
-            
-            this.console.WriteLine(player + " has left the game.");
+            Console.WriteLine(player + " has left the game.");
+
+            if (_currentPlayer >= _players.Count)
+            {
+                _currentPlayer = 0;
+            }
 
             return IsPlayable(); // return whether the game is still playable after removing the player
         }
