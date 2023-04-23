@@ -26,8 +26,7 @@ public class GameTest
         
         string Game = "Game";  
         string Over = "Over";
-     
-  
+        
         //Convert the string into an array of words  
         string[] source = text.Split(new char[] { '.', '?', '!', ' ', ';', ':', ',', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);  
   
@@ -40,11 +39,12 @@ public class GameTest
         var matchQueryOver = from word in source  
             where word.Equals(Over, StringComparison.InvariantCultureIgnoreCase)  
             select word;  
+        
   
         // Count the matches, which executes the query.  
         int wordCountGame = matchQueryGame.Count();  
         int wordCountOver = matchQueryOver.Count();
-    
+        
         // first one for win the game and second one for the game over
         Assert.Equal(2,wordCountGame);
         Assert.Equal(1,wordCountOver );
@@ -66,6 +66,7 @@ public class GameTest
         
         string text = consoleSpy.Content;
         
+        string add = "added";
         string Game = "Game";  
         string Over = "Over";
      
@@ -83,9 +84,19 @@ public class GameTest
             where word.Equals(Over, StringComparison.InvariantCultureIgnoreCase)  
             select word;  
   
+        // Create the query.  Use the InvariantCultureIgnoreCase comparision to match "data" and "Data"
+        var matchQueryAdd = from word in source  
+            where word.Equals(add, StringComparison.InvariantCultureIgnoreCase)  
+            select word;  
+        
+        
         // Count the matches, which executes the query.  
+        int wordCountAdd = matchQueryAdd.Count();
         int wordCountGame = matchQueryGame.Count();  
         int wordCountOver = matchQueryOver.Count();
+        
+        //nous n'ajoutons pas de nouveau joueur lord du restart, nous gardons bien les anciens joueurs et paramètre
+        Assert.Equal(3,wordCountAdd);
     
         // (first one for win the game and second one for the game over) X 2 because regame
         Assert.Equal(4, wordCountGame);
