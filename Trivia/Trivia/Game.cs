@@ -272,6 +272,7 @@ namespace Trivia
                 foreach (Player player in _players)
                 {
                     _purses[_currentPlayer] = 0;
+                    corectanswerRow[_currentPlayer] = 0;
                 }
                 return "y";
             }
