@@ -17,8 +17,7 @@ namespace Trivia
             Player player1 = new Player("Chet");
             Player player2 = new Player("Pat");
             Player player3 = new Player("Sue");
-            Player player4 = new Player("Sue2");
-            new GameRunner().PlayAGame(new List<Player> { player1, player2, player3, player4 });
+            new GameRunner().PlayAGame(new List<Player> { player1, player2, player3 });
         }
 
         private GameRunner()
