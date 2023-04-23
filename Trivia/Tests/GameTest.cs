@@ -103,4 +103,23 @@ public class GameTest
         Assert.Equal( 2, wordCountOver);
     }
 
+    [Fact]
+    public void ScoreBoard()
+    {
+        var consoleSpy = new ConsoleSpy();
+
+        var runner = new GameRunner(consoleSpy);
+
+        Player player = new Player("Chet", 1, 2);
+        Player player2 = new Player("Pat", 1, 2);
+        Player player3 = new Player("Sue", 1, 2);
+        List<Player> playersList = new List<Player> { player, player2, player3 };
+
+        runner.PlayAGameTest(playersList, true, 2);
+        
+        Assert.Contains("Game Over! Here is the leaderboard:", consoleSpy.Content);
+        Assert.Contains("1. ", consoleSpy.Content);
+        Assert.Contains("2. ", consoleSpy.Content);
+        Assert.Contains("3. ", consoleSpy.Content);
+    }
 }
