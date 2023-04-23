@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Tests.Utilities;
 using Trivia;
+using Trivia.Exceptions;
 using Xunit;
 
 public class GameTest
@@ -122,4 +123,41 @@ public class GameTest
         Assert.Contains("2. ", consoleSpy.Content);
         Assert.Contains("3. ", consoleSpy.Content);
     }
+    
+    [Fact]
+    public void GoldRequirementTest1()
+    {
+        var consoleSpy = new ConsoleSpy();
+
+        var runner = new GameRunner(consoleSpy);
+
+        Player player = new Player("Chet", 1, 2);
+        Player player2 = new Player("Pat", 1, 2);
+        Player player3 = new Player("Sue", 1, 2);
+        List<Player> playersList = new List<Player> { player, player2, player3 };
+
+        runner.PlayAGameTest(playersList, true, 2, 4);
+        
+        Assert.Contains(Messages.MinimumGoldRequirement6, consoleSpy.Content);
+
+    }
+    
+    [Fact]
+    public void GoldRequirementTest2()
+    {
+        var consoleSpy = new ConsoleSpy();
+
+        var runner = new GameRunner(consoleSpy);
+
+        Player player = new Player("Chet", 1, 2);
+        Player player2 = new Player("Pat", 1, 2);
+        Player player3 = new Player("Sue", 1, 2);
+        List<Player> playersList = new List<Player> { player, player2, player3 };
+
+        runner.PlayAGameTest(playersList, true, 2, 50);
+        
+        Assert.DoesNotContain(Messages.MinimumGoldRequirement6, consoleSpy.Content);
+
+    }
+    
 }

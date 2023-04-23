@@ -7,7 +7,6 @@ public class Messages
 
     public const string TooManyPlayerException = "Une partie ne peut pas démarrer avec plus de 6 joueurs";
 
-    public const string GettingOutOfThePenaltyBox = " is getting out of the penalty box";
+    public const string MinimumGoldRequirement6 = " Il faut mettre en paramètre au minimum 6 pièces d'or pour pouvoir gagner la partie";
 
-    public const string LeavesTheGame = " is leaving the game";
 }

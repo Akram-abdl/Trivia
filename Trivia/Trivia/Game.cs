@@ -134,6 +134,12 @@ namespace Trivia
         // add a player to the game
         public bool Add(Player player)
         {
+            
+            if (_goldCoinsToWin < 6)
+            {
+                throw new Exception(Messages.MinimumGoldRequirement6);
+            }
+            
             if (HowManyPlayers() == 6)
                 throw new Exception(Messages.TooManyPlayerException);
             
