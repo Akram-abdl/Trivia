@@ -39,15 +39,19 @@ namespace Trivia
         private IConsole console;
         private int currentQuestionIndex = 50;
         private string message;
+        //Test
+        // 0: null, 1: yes question asked, 2: no question asked
+        private int reGame;
 
         // constructor
-        public Game(IConsole console, Random rand, bool replaceRockWithTechno = false, int goldCoinsToWin = 6, int penaltyBoxNumberOfPlaces = 0)
+        public Game(IConsole console, Random rand, bool replaceRockWithTechno = false, int goldCoinsToWin = 6, int penaltyBoxNumberOfPlaces = 0, int reGame = 0)
         {
             this.console = console;
             _replaceRockWithTechno = replaceRockWithTechno;
             _goldCoinsToWin = goldCoinsToWin;
             this.rand = rand;
             _penaltyBoxNumberOfPlaces = penaltyBoxNumberOfPlaces;
+            this.reGame = reGame;
             
             for (var i = 0; i < 50; i++)
             {
@@ -261,13 +265,14 @@ namespace Trivia
 
         public String AskReGameQuestion()
         {
-            if (_players[_currentPlayer].reGameQuestion == 0)
+            if (reGame == 0)
             {
                 console.WriteLine(" Voulez vous rejouer la partie avec les mêmes paramètres ? (y/n)");
                 return Console.ReadLine().ToLower();
             }
-            else if (_players[_currentPlayer].askYesQuestion == 1)
+            else if (reGame == 1)
             {
+                reGame = 2;
                 return "y";
             }
             else
@@ -278,12 +283,12 @@ namespace Trivia
         
         public String AskJokerQuestion()
         {
-            if (_players[_currentPlayer].reGameQuestion == 0)
+            if (_players[_currentPlayer].askJokerQuestion == 0)
             {
                 console.WriteLine(" Do you want to use your joker? (yes/no)");
                 return Console.ReadLine().ToLower();
             }
-            else if (_players[_currentPlayer].askYesQuestion == 1)
+            else if (_players[_currentPlayer].askJokerQuestion == 1)
             {
                 return "yes";
             }
@@ -360,27 +365,6 @@ namespace Trivia
         }
 
         // current category
-
-        public bool useJoker()
-
-        {
-            bool val = false;
-            if (_players[_currentPlayer].nbJoker == 1)
-            {
-                console.WriteLine("Do you want to use your joker ?");
-                
-                if (Console.ReadLine() == 'y'.ToString()) 
-                {
-                    _players[_currentPlayer].nbJoker++;
-                    _players[_currentPlayer].use = true;
-                   val = true;
-                }
-                
-
-            }
-            return val;
-            
-        }
         private string CurrentCategory()
         {
             if (_places[_currentPlayer] == 0 || _places[_currentPlayer] == 4 ) return "Pop";
@@ -424,7 +408,6 @@ namespace Trivia
                                           + _purses[_currentPlayer]
                                           + " Gold Coins.");
                     }
-                    
 
                     if (DidPlayerWin())
                     {

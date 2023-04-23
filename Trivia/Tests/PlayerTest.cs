@@ -20,7 +20,7 @@ public class PlayerTest
         Player player = new Player("Chet");
         List<Player> playersList = new List<Player> { player };
         
-        runner.PlayAGameTest(playersList, true);
+        runner.PlayAGameTest(playersList, true,2);
         
         Assert.Contains(Messages.NotEnoughPlayerException, consoleSpy.Content);
 
@@ -42,7 +42,7 @@ public class PlayerTest
         Player player7 = new Player("Tess");
         List<Player> playersList = new List<Player> { player, player2, player3, player4, player5, player6, player7 };
         
-        runner.PlayAGameTest(playersList, true);
+        runner.PlayAGameTest(playersList, true, 2);
        
         Assert.Contains(Messages.TooManyPlayerException, consoleSpy.Content);
     }
@@ -55,12 +55,12 @@ public class PlayerTest
 
         var runner = new GameRunner(consoleSpy);
         
-        Player player = new Player("Chet", 2,2,2);
-        Player player2 = new Player("Pat", 1,2,2);
-        Player player3 = new Player("Sue", 1,2,2);
+        Player player = new Player("Chet", 2,2);
+        Player player2 = new Player("Pat", 1,2);
+        Player player3 = new Player("Sue", 1,2);
         List<Player> playersList = new List<Player> { player, player2, player3 };
         
-        runner.PlayAGameTest(playersList,true);
+        runner.PlayAGameTest(playersList,true, 2);
 
         
         string text = consoleSpy.Content;

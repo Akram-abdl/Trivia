@@ -54,9 +54,9 @@ namespace Trivia
         }
 
         // play a game test
-        public void PlayAGameTest(List<Player> players, bool rockTechno, int goldCoinsToWin = 10, int penaltyBoxNumberOfPlaces = 0)
+        public void PlayAGameTest(List<Player> players, bool rockTechno, int reGame, int goldCoinsToWin = 10, int penaltyBoxNumberOfPlaces = 0)
         {
-            var aGame = new Game(console, rand, rockTechno, goldCoinsToWin, penaltyBoxNumberOfPlaces);
+            var aGame = new Game(console, rand, rockTechno, goldCoinsToWin, penaltyBoxNumberOfPlaces,reGame);
 
             Game(aGame, players);
         }

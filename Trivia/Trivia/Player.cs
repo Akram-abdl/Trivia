@@ -19,8 +19,6 @@ public class Player
     // 0: null, 1: yes question asked, 2: no question asked
     public int askYesQuestion { get; set; }
     // 0: null, 1: yes question asked, 2: no question asked
-    public int reGameQuestion { get; set; }
-    // 0: null, 1: yes question asked, 2: no question asked
     public int askJokerQuestion { get; set; }
     
 
@@ -30,15 +28,13 @@ public class Player
         nbJoker = 1;
         use = false;
         askYesQuestion = 0;
-        reGameQuestion = 0;
         askJokerQuestion = 0;
     }
     
-    public Player(string name, int askYesQuestion, int reGameQuestion, int askJokerQuestion)
+    public Player(string name, int askYesQuestion, int askJokerQuestion)
     {
         this.name = name;
         this.askYesQuestion = askYesQuestion;
-        this.reGameQuestion = reGameQuestion;
         this.askJokerQuestion = askJokerQuestion;
         nbJoker = 1;
         use = false;
