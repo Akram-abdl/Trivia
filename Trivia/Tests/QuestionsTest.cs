@@ -19,7 +19,7 @@ public class QuestionsTest
         Player player3 = new Player("Sue", 1, 2);
         List<Player> playersList = new List<Player> { player, player2, player3 };
         
-        runner.PlayAGameTest(playersList,true, 1);
+        runner.PlayAGameTest(playersList,true, 2);
 
         Assert.Contains("Techno", consoleSpy.Content);
         Assert.DoesNotContain("Rock", consoleSpy.Content);
