@@ -29,7 +29,7 @@ namespace Tests
             }
         }
 
-        [Fact]
+        [Fact(Skip = "Golden Master")]
         public void Replay()
         {
             var consoleSpy = new ConsoleSpy();

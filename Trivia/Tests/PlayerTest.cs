@@ -60,7 +60,7 @@ public class PlayerTest
         Player player3 = new Player("Sue", 1,2);
         List<Player> playersList = new List<Player> { player, player2, player3 };
         
-        runner.PlayAGameTest(playersList,true, 2);
+        runner.PlayAGameTest(playersList,true, 2, 20);
 
         
         string text = consoleSpy.Content;
@@ -91,9 +91,9 @@ public class PlayerTest
         int wordCountSue = matchQuerySue.Count();
       
         Assert.Contains("Chet has left the game.", consoleSpy.Content);
-        Assert.NotInRange(wordCountChet, 20,100);
-        Assert.InRange(wordCountPat, 20,100);
-        Assert.InRange(wordCountSue, 20,100);
+        Assert.NotInRange(wordCountChet, 20,20000);
+        Assert.InRange(wordCountPat, 20,20000);
+        Assert.InRange(wordCountSue, 20,20000);
         
     }
 

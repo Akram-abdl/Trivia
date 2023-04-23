@@ -187,7 +187,7 @@ namespace Trivia
                     _orderInPenaltyBox.Remove(_orderInPenaltyBox.ElementAt(i - 1));
             }
 
-            Console.WriteLine(player + " has left the game.");
+            console.WriteLine(player + " has left the game.");
 
             if (_currentPlayer >= _players.Count)
             {
