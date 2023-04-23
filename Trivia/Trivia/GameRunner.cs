@@ -67,12 +67,12 @@ namespace Trivia
             try
             {
                 int numPlayersInLeaderboard = 0;
-                do
-                {
                     foreach (Player player in players)
                     {
                         aGame.Add(player);
                     }
+                do
+                {
 
                     do
                     {

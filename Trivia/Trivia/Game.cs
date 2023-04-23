@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 using Trivia.Exceptions;
 
 namespace Trivia
@@ -272,6 +273,10 @@ namespace Trivia
             }
             else if (reGame == 1)
             {
+                foreach (Player player in _players)
+                {
+                    _purses[_currentPlayer] = 0;
+                }
                 reGame = 2;
                 return "y";
             }
@@ -432,6 +437,11 @@ namespace Trivia
                 }
                 else
                 {
+                    int temp = int.Parse(corectanswerRow[_currentPlayer].ToString());
+                    corectanswerRow[_currentPlayer] = temp + 1;
+                    int bourse = int.Parse(_purses[_currentPlayer].ToString());
+                    _purses[_currentPlayer] = bourse + temp;
+
                     console.WriteLine("Answer was correct!!!!");
                     _purses[_currentPlayer]++;
                     console.WriteLine($"{_players[_currentPlayer]} now has {_purses[_currentPlayer]} Gold Coins.");
@@ -455,6 +465,7 @@ namespace Trivia
         // if the player answered wrong
         public bool WrongAnswer()
         {
+            corectanswerRow[_currentPlayer] = 0;
             console.WriteLine("Question was incorrectly answered");
             console.WriteLine($"{_players[_currentPlayer]} was sent to the penalty box");
             _inPenaltyBox[_currentPlayer] = true;
