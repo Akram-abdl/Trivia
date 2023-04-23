@@ -40,15 +40,19 @@ namespace Trivia
         private IConsole console;
         private int currentQuestionIndex = 50;
         private string message;
+        //Test
+        // 0: null, 1: yes question asked, 2: no question asked
+        private int reGame;
 
         // constructor
-        public Game(IConsole console, Random rand, bool replaceRockWithTechno = false, int goldCoinsToWin = 6, int penaltyBoxNumberOfPlaces = 0)
+        public Game(IConsole console, Random rand, bool replaceRockWithTechno = false, int goldCoinsToWin = 6, int penaltyBoxNumberOfPlaces = 0, int reGame = 0)
         {
             this.console = console;
             _replaceRockWithTechno = replaceRockWithTechno;
             _goldCoinsToWin = goldCoinsToWin;
             this.rand = rand;
             _penaltyBoxNumberOfPlaces = penaltyBoxNumberOfPlaces;
+            this.reGame = reGame;
             
             for (var i = 0; i < 50; i++)
             {
@@ -130,6 +134,12 @@ namespace Trivia
         // add a player to the game
         public bool Add(Player player)
         {
+            
+            if (_goldCoinsToWin < 6)
+            {
+                throw new Exception(Messages.MinimumGoldRequirement6);
+            }
+            
             if (HowManyPlayers() == 6)
                 throw new Exception(Messages.TooManyPlayerException);
             
@@ -161,7 +171,7 @@ namespace Trivia
             }
 
             _players.RemoveAt(playerIndex);
-            int length = _players.Count - playerIndex - 1;
+            int length = _players.Count - playerIndex;
             if (length > 0)
             {
                 Array.Copy(_places, playerIndex + 1, _places, playerIndex, length);
@@ -169,16 +179,20 @@ namespace Trivia
                 Array.Copy(_inPenaltyBox, playerIndex + 1, _inPenaltyBox, playerIndex, length);
             }
 
-            if (_currentPlayer >= playerIndex)
+            _currentPlayer = playerIndex < _currentPlayer ? _currentPlayer - 1 : _currentPlayer;
+
+            for (int i = 0; i < _orderInPenaltyBox.Count; i++)
             {
-                _currentPlayer = _currentPlayer > 0 ? _currentPlayer - 1 : _players.Count - 1;
+                if (_orderInPenaltyBox.ElementAt(i) > playerIndex)
+                    _orderInPenaltyBox.Remove(_orderInPenaltyBox.ElementAt(i - 1));
             }
 
-            LinkedListNode<int> indexInPenaltyBox = _orderInPenaltyBox.Find(playerIndex);
-            if(indexInPenaltyBox != null)
-                _orderInPenaltyBox.Remove(indexInPenaltyBox);
-            
-            this.console.WriteLine(player + " has left the game.");
+            console.WriteLine(player + " has left the game.");
+
+            if (_currentPlayer >= _players.Count)
+            {
+                _currentPlayer = 0;
+            }
 
             return IsPlayable(); // return whether the game is still playable after removing the player
         }
@@ -262,23 +276,41 @@ namespace Trivia
 
         public String AskReGameQuestion()
         {
-            if (_players[_currentPlayer].reGameQuestion == 0)
+            if (reGame == 0)
             {
                 console.WriteLine(" Voulez vous rejouer la partie avec les mêmes paramètres ? (y/n)");
                 return Console.ReadLine().ToLower();
             }
-            else if (_players[_currentPlayer].askYesQuestion == 1)
+            else if (reGame == 1)
             {
                 foreach (Player player in _players)
                 {
                     _purses[_currentPlayer] = 0;
                     corectanswerRow[_currentPlayer] = 0;
                 }
+                reGame = 2;
                 return "y";
             }
             else
             {
                 return "n";
+            }
+        }
+        
+        public String AskJokerQuestion()
+        {
+            if (_players[_currentPlayer].askJokerQuestion == 0)
+            {
+                console.WriteLine(" Do you want to use your joker "+ _players[_currentPlayer].name +" ? (yes/no)");
+                return Console.ReadLine().ToLower();
+            }
+            else if (_players[_currentPlayer].askJokerQuestion == 1)
+            {
+                return "yes";
+            }
+            else
+            {
+                return "no";
             }
         }
 
@@ -349,27 +381,6 @@ namespace Trivia
         }
 
         // current category
-
-        public bool useJoker()
-
-        {
-            bool val = false;
-            if (_players[_currentPlayer].nbJoker == 1)
-            {
-                console.WriteLine("Do you want to use your joker ?");
-                
-                if (Console.ReadLine() == 'y'.ToString()) 
-                {
-                    _players[_currentPlayer].nbJoker++;
-                    _players[_currentPlayer].use = true;
-                   val = true;
-                }
-                
-
-            }
-            return val;
-            
-        }
         private string CurrentCategory()
         {
             if (_places[_currentPlayer] == 0 || _places[_currentPlayer] == 4 ) return "Pop";
@@ -402,11 +413,10 @@ namespace Trivia
                     if (useJoker == true)
                     {
                         _players[_currentPlayer].nbJoker--;
-                        console.WriteLine("You use your joker so passed the question but you didn't won any Gold coin");
+                        console.WriteLine( _players[_currentPlayer].name + " , You use your joker so passed the question but you didn't won any Gold coin");
                     }
                     else
                     {
-
                         console.WriteLine("Answer was correct!!!!");
                         _purses[_currentPlayer]++;
                         console.WriteLine(_players[_currentPlayer].name
@@ -414,7 +424,6 @@ namespace Trivia
                                           + _purses[_currentPlayer]
                                           + " Gold Coins.");
                     }
-                    
 
                     if (DidPlayerWin())
                     {
@@ -424,21 +433,18 @@ namespace Trivia
                     _currentPlayer++;
                     if (_currentPlayer == _players.Count) _currentPlayer = 0;
                 }
-
                 else
                 {
                     _currentPlayer++;
                     if (_currentPlayer == _players.Count) _currentPlayer = 0;
                 }
             }
-
             else
             {
-
                 if (useJoker == true)
                 {
                     _players[_currentPlayer].nbJoker--;
-                    console.WriteLine("You use your joker so passed the question but you didn't won any Gold coin");
+                    console.WriteLine( _players[_currentPlayer].name + " , You use your joker so passed the question but you didn't won any Gold coin");
                 }
                 else
                 {
