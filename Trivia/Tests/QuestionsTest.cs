@@ -15,11 +15,11 @@ public class QuestionsTest
         var runner = new GameRunner(consoleSpy);
         
         Player player = new Player("Chet", 1,2);
-        Player player2 = new Player("Pat", 1,2);
-        Player player3 = new Player("Sue", 1,2);
+        Player player2 = new Player("Pat", 1, 2);
+        Player player3 = new Player("Sue", 1, 2);
         List<Player> playersList = new List<Player> { player, player2, player3 };
         
-        runner.PlayAGameTest(playersList,true);
+        runner.PlayAGameTest(playersList,true, 2);
 
         Assert.Contains("Techno", consoleSpy.Content);
         Assert.DoesNotContain("Rock", consoleSpy.Content);
@@ -37,7 +37,7 @@ public class QuestionsTest
         Player player3 = new Player("Sue", 1,2);
         List<Player> playersList = new List<Player> { player, player2, player3 };
         
-        runner.PlayAGameTest(playersList,false);
+        runner.PlayAGameTest(playersList,false, 2);
 
         Assert.Contains("Rock", consoleSpy.Content);
         Assert.DoesNotContain("Techno", consoleSpy.Content);
@@ -55,7 +55,7 @@ public class QuestionsTest
         Player player3 = new Player("Sue", 1,2);
         List<Player> playersList = new List<Player> { player, player2, player3 };
         
-        runner.PlayAGameTest(playersList,false, 50);
+        runner.PlayAGameTest(playersList,false, 2,50);
         
         Assert.Contains("Rock", consoleSpy.Content);
         Assert.Contains("Pop", consoleSpy.Content);

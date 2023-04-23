@@ -53,9 +53,9 @@ namespace Trivia
         }
 
         // play a game test
-        public void PlayAGameTest(List<Player> players, bool rockTechno, int goldCoinsToWin = 10, int penaltyBoxNumberOfPlaces = 0)
+        public void PlayAGameTest(List<Player> players, bool rockTechno, int reGame, int goldCoinsToWin = 10, int penaltyBoxNumberOfPlaces = 0)
         {
-            var aGame = new Game(console, rand, rockTechno, goldCoinsToWin, penaltyBoxNumberOfPlaces);
+            var aGame = new Game(console, rand, rockTechno, goldCoinsToWin, penaltyBoxNumberOfPlaces,reGame);
 
             Game(aGame, players);
         }
@@ -84,8 +84,7 @@ namespace Trivia
                             if (userAnswer == "yes") {
                                 if (aGame.haveJok())
                                 {
-                                    console.WriteLine("Do you want to use your joker? (yes/no): ");
-                                    jokAnswer = Console.ReadLine().ToLower();
+                                    jokAnswer = aGame.AskJokerQuestion();
                                 }
                                 if (jokAnswer == "yes")
                                 {
@@ -103,7 +102,7 @@ namespace Trivia
                                     }
                                 }
                                 
-                            } else if (userAnswer == "leave") {
+                            } else {
 
                                 _notAWinner = aGame.RemovePlayer(aGame.GetCurrentPlayer());
                             }
